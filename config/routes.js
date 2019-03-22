@@ -51,6 +51,8 @@ module.exports.routes = {
 
   'POST /payfort/authorization': 'PaymentsController.askForAuthorization' ,
 
+
+
   /***************
    * 
    * USER 
@@ -102,6 +104,9 @@ module.exports.routes = {
   //subir una imagen for a fish
   'POST /api/images': 'ImageController.imagesUpload',
 
+  
+
+
   //Para guardar multiples images de un producto
   'POST /api/fish/images/:id': 'ImageController.multipleImagesUpload',
 
@@ -129,6 +134,13 @@ module.exports.routes = {
    * FISH AND FISHTYPE
    * 
    */
+
+     
+  /****************
+   * Fish Variations
+   */
+   "GET /api/variations/add": "FishController.addFishWithVariations",
+   
    //add new product and send email
    "POST /fish":"FishController.addFish",
    //Para guardar multiples productos
