@@ -53,26 +53,28 @@ module.exports = {
       required: true
     },
 
+    /* // moved to variations
     preparation: {
       type: "string", 
       required: true
-    },
+    },*/
 
     treatment: {
       type: "string",
       required: true
     },
-
+/* // moved to variations
     wholeFishWeight: {
       type: "string",
       required: false
     },
-
+*/
 
     
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
+    /* // moved to variations
     weight: {
       type: 'json',
       required: false,
@@ -95,7 +97,7 @@ module.exports = {
         }
       `
     },
-
+*/
     hsCode: {
       type: 'string',
       required: false,

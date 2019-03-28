@@ -13,16 +13,16 @@ module.exports = {
 
 
   exits: {
-
+    outputType:{
+      result: "ref"
+    }
   },
 
 
   fn:  function (inputs, exits) {
 
     // All done.
-    return exits.success({
-      message: "lol"
-    });
+    return exits.success("seafood_sku_test_");
 
   }
 

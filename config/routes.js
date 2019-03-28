@@ -139,8 +139,12 @@ module.exports.routes = {
   /****************
    * Fish Variations
    */
-   "GET /api/variations/add": "FishController.addFishWithVariations",
-   
+   "POST /api/variations/add": "FishController.addFishWithVariations",
+
+   "GET /api/fish/:id/variations/": "FishController.getFishWithVariations",
+   //search variations by weight
+   "POST /api/fish/variation/filter": "FishController.filterFishWithVariations",
+
    //add new product and send email
    "POST /fish":"FishController.addFish",
    //Para guardar multiples productos
