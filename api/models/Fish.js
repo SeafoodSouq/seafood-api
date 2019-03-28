@@ -48,10 +48,7 @@ module.exports = {
       required: false
     },
 
-    raised: {
-      type: "string",
-      required: true
-    },
+    
 
     /* // moved to variations
     preparation: {
@@ -59,10 +56,7 @@ module.exports = {
       required: true
     },*/
 
-    treatment: {
-      type: "string",
-      required: true
-    },
+    
 /* // moved to variations
     wholeFishWeight: {
       type: "string",
@@ -141,6 +135,16 @@ module.exports = {
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
+    
+    raised: {
+      model: "raised",
+      required: true
+    },
+    treatment: {
+      model: "treatment",
+      required: true
+    },
+    
     store: {
       model: "store",
       required: true
