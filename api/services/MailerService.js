@@ -73,7 +73,7 @@ module.exports = {
                 name: user.firstName + ' ' + user.lastName,
                 id: user.id,
                 code: user.code
-            })
+            }, ["code"])
         )
             .then(res => {
                 transporter.sendMail({
