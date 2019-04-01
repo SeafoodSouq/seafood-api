@@ -266,7 +266,8 @@ module.exports = {
         email.render('../email_templates/forgot_password',
             await applyExtend({
                 code: code,
-                name: name
+                name: name,
+                webAppUrl: webappUrl
             })
         )
             .then(res => {
