@@ -9,7 +9,7 @@
  * https://sailsjs.com/config/bootstrap
  */
 
-module.exports.bootstrap = async function(done) {
+module.exports.bootstrap = async function (done) {
 
   // Import dependencies
   var path = require('path');
@@ -31,22 +31,22 @@ module.exports.bootstrap = async function(done) {
   if (sails.config.models.migrate !== 'drop' && sails.config.environment !== 'test') {
     // If this is _actually_ a production environment (real or simulated), or we have
     // `migrate: safe` enabled, then prevent accidentally removing all data!
-    if (process.env.NODE_ENV==='production' || sails.config.models.migrate === 'safe') {
-      sails.log.warn('Since we are running with migrate: \'safe\' and/or NODE_ENV=production (in the "'+sails.config.environment+'" Sails environment, to be precise), skipping the rest of the bootstrap to avoid data loss...');
+    if (process.env.NODE_ENV === 'production' || sails.config.models.migrate === 'safe') {
+      sails.log.warn('Since we are running with migrate: \'safe\' and/or NODE_ENV=production (in the "' + sails.config.environment + '" Sails environment, to be precise), skipping the rest of the bootstrap to avoid data loss...');
       return done();
     }//•
 
     // Compare bootstrap version from code base to the version that was last run
     var lastRunBootstrapInfo = await sails.helpers.fs.readJson(bootstrapLastRunInfoPath)
-    .tolerate('doesNotExist');// (it's ok if the file doesn't exist yet-- just keep going.)
+      .tolerate('doesNotExist');// (it's ok if the file doesn't exist yet-- just keep going.)
 
     if (lastRunBootstrapInfo && lastRunBootstrapInfo.lastRunVersion === HARD_CODED_DATA_VERSION) {
-      sails.log('Skipping v'+HARD_CODED_DATA_VERSION+' bootstrap script...  (because it\'s already been run)');
-      sails.log('(last run on this computer: @ '+(new Date(lastRunBootstrapInfo.lastRunAt))+')');
+      sails.log('Skipping v' + HARD_CODED_DATA_VERSION + ' bootstrap script...  (because it\'s already been run)');
+      sails.log('(last run on this computer: @ ' + (new Date(lastRunBootstrapInfo.lastRunAt)) + ')');
       return done();
     }//•
 
-    sails.log('Running v'+HARD_CODED_DATA_VERSION+' bootstrap script...  ('+(lastRunBootstrapInfo ? 'before this, the last time the bootstrap ran on this computer was for v'+lastRunBootstrapInfo.lastRunVersion+' @ '+(new Date(lastRunBootstrapInfo.lastRunAt)) : 'looks like this is the first time the bootstrap has run on this computer')+')');
+    sails.log('Running v' + HARD_CODED_DATA_VERSION + ' bootstrap script...  (' + (lastRunBootstrapInfo ? 'before this, the last time the bootstrap ran on this computer was for v' + lastRunBootstrapInfo.lastRunVersion + ' @ ' + (new Date(lastRunBootstrapInfo.lastRunAt)) : 'looks like this is the first time the bootstrap has run on this computer') + ')');
   }
   else {
     sails.log('Running bootstrap script because it was forced...  (either `--drop` or `--environment=test` was used)');
@@ -54,16 +54,22 @@ module.exports.bootstrap = async function(done) {
 
   // Since the hard-coded data version has been incremented, and we're running in
   // a "throwaway data" environment, delete all records from all models.
-  for (let identity in sails.models) {
-    await sails.models[identity].destroy({});
-  }//∞
+  // for (let identity in sails.models) {
+  //   await sails.models[identity].destroy({});
+  // }//∞
 
   // By convention, this is a good place to set up fake data during development.
-  await User.createEach([
-    { email: 'kharron@senorcoders.com', firstName: 'Kharron', lastName: 'Coders', code: 'odo237',
-    password: await sails.helpers.passwords.hashPassword('holahola!'), verified: false, location: 'san juan',
-    role: 0 }
-  ]);
+  if (process.env.NODE_ENV !== "test") {
+    await User.createEach([
+      {
+        email: 'kharron@senorcoders.com', firstName: 'Kharron', lastName: 'Coders', code: 'odo237',
+        password: await sails.helpers.passwords.hashPassword('holahola!'), verified: false, location: 'san juan',
+        role: 0,
+        dataExtra: {}
+      }
+    ]);
+  }
+
 
   // Save new bootstrap version
   await sails.helpers.fs.writeJson.with({
@@ -74,9 +80,9 @@ module.exports.bootstrap = async function(done) {
     },
     force: true
   })
-  .tolerate((err)=>{
-    sails.log.warn('For some reason, could not write bootstrap version .json file.  This could be a result of a problem with your configured paths, or, if you are in production, a limitation of your hosting provider related to `pwd`.  As a workaround, try updating app.js to explicitly pass in `appPath: __dirname` instead of relying on `chdir`.  Current sails.config.appPath: `'+sails.config.appPath+'`.  Full error details: '+err.stack+'\n\n(Proceeding anyway this time...)');
-  });
+    .tolerate((err) => {
+      sails.log.warn('For some reason, could not write bootstrap version .json file.  This could be a result of a problem with your configured paths, or, if you are in production, a limitation of your hosting provider related to `pwd`.  As a workaround, try updating app.js to explicitly pass in `appPath: __dirname` instead of relying on `chdir`.  Current sails.config.appPath: `' + sails.config.appPath + '`.  Full error details: ' + err.stack + '\n\n(Proceeding anyway this time...)');
+    });
 
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)
