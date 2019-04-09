@@ -150,3 +150,8 @@ email_templates/index.html
 email_templates/data.json
 server_ejs
 server_ejs/node_modules
+
+################################################
+# coverage for testing
+################################################
+coverage/
