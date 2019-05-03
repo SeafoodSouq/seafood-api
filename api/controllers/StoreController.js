@@ -71,7 +71,7 @@ module.exports = {
                 
                 await Promise.all( Variations.map( async ( variation, index ) => {
                     
-                    variations[index]['prices'] = await variationPrices.find( { variation: variation.id } );
+                    variations[index]['prices'] = await VariationPrices.find( { variation: variation.id } );
 
                     
                 } ) )
