@@ -64,17 +64,18 @@ module.exports = {
             console.log(id);
             let store = await Store.findOne({ id });
             store.fishs = await Fish.find({ store: store.id }).populate("type").populate("status")
-
+            fish['variations'] = [];
             await Promise.all( store.fishs.map( async ( fish ) => {
                 let variations = await Variations.find( { fish: fish.id } );
 
-                variations = await Promise.all( variations.map( async ( variation ) => {
+                
+                await Promise.all( Variations.map( async ( variation, index ) => {
                     
-                    variation['prices'] = await variationPrices.find( { variation: variation.id } );
+                    variations[index]['prices'] = await variationPrices.find( { variation: variation.id } );
 
                     
                 } ) )
-                fish['variations'] = variations;
+                fish['variations'].push(variations);
             } ) )
 
             res.json(store);
