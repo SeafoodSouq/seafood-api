@@ -40,7 +40,7 @@ module.exports = {
                 invoiceDueDate: paidDateTime,
                 invoiceDate: paidDateTime,
                 buyerContactName: cart.buyer.firstName + ' ' + cart.buyer.lastName,
-                buyerContactPostalAddress: `${cart.buyer.dataExtra.Address ? cart.buyer.dataExtra.Address : ''}${cart.buyer.dataExtra.City ? ", "+ cart.buyer.dataExtra.City : ''}${cart.buyer.dataExtra.country ? ", "+ cart.buyer.dataExtra.country : ''}${cart.buyer.dataExtra.zipCode ? ", "+ cart.buyer.dataExtra.zipCode : ''}`,
+                buyerContactPostalAddress: `${cart.buyer.dataExtra.Address}, ${cart.buyer.dataExtra.City}, ${cart.buyer.dataExtra.country}, ${cart.buyer.dataExtra.zipCode}`,
                 contactAccountNumber: '100552524900003',
                 InvoiceNumber: 'InvoiceNumber',
                 vat: cart.buyer.dataExtra.vat || 0,
