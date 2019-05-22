@@ -149,7 +149,7 @@
         <h3 style="font-size: 20px">TAX INVOICE</h3>
         <p><%= buyerContactName %><br>
           <%=buyerContactPostalAddress %><br> 
-          VAT: <%=vat %>
+          <%=vat %>
         </p>
       </div>
       <div class="col col-25">
@@ -277,7 +277,7 @@
             <span class="no-border">Total Tax <%= uaeTaxes %>%</span>
         </td>
         <td class="col col-1">
-            <span class="no-border"><%=uaeTaxesFee %></span>  
+            <span class="no-border"><%= (uaeTaxesFee).toFixed(2) %></span>  
         </td>
       </tr>
     </table>-->
