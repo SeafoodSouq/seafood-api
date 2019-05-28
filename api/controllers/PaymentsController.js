@@ -54,7 +54,7 @@ var mydata = {
       "language": req.param('language'),
       "token_name": req.param('token_name'),
       "signature": req.param('signature'),
-      "settlement_reference": req.param('settlement_reference'),
+      /*"settlement_reference": req.param('settlement_reference'),*/
       "customer_email": req.param('customer_email'),
       "amount": req.param('amount'),
       "order_description": req.param('order_description'),
@@ -62,12 +62,12 @@ var mydata = {
       "customer_ip": req.param("customer_ip")
    } ;
 
-let url	 = "https://sbpaymentservices.payfort.com/FortAPI/paymentApi";
-url = 'https://paymentservices.payfort.com/FortAPI/paymentApi';
+let url	 = "https://sbpaymentservices.payfort.com/FortAPI/paymentApi"; //dev
+url = 'https://paymentservices.payfort.com/FortAPI/paymentApi'; //live
 console.log( 'ask for auto' ,mydata );
 axios.post( url, mydata, { 'Content-Type': 'application/json', 'cache-control': 'no-cache' }  )
   .then(function (response) {
-    //console.log(response);
+    //console.log('res',response);
     res.status(200).json(response.data)
   })
   .catch(function (error) {
