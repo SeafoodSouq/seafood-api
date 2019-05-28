@@ -9,8 +9,8 @@ module.exports = {
                 return res.json({ message: "The code entered is incorrect" });
 
             if (us.code === code) {
-                // us = await User.update({ id }, { verification: true }).fetch();
-                res.json({ message: "valid", url: webappUrl + '/verification/' + id + "/" + code });
+                us = await User.update({ id }, { verification: true }).fetch();
+                res.json({ message: "valid", url: webappUrl + '/verification/' + id + "/" + code, user: us });
             } else {
                 res.json({ message: "The code entered is incorrect" });
             }
@@ -65,9 +65,9 @@ module.exports = {
             let forg = await ForgotPassword.findOne({ code, valid: false });
             let moment = require("moment");
             if (forg === undefined) {
-                return res.status(400).send("the code entered is incorrect");
+                return res.status(400).send("The code entered is incorrect. Please check your reset password email and try again");
             } else if (moment(forg.createdAt).isAfter(moment())) {
-                return res.status(400).send("the code entered expire");
+                return res.status(400).send("The code entered expired");
             }
 
             await ForgotPassword.update({ id: forg.id }, { valid: true })
@@ -134,6 +134,10 @@ module.exports = {
         try {
 
             let users = await User.find({ role: 0 });
+            users = users.map( user => {
+                delete user.token;
+                return user;
+            } )
             res.json(users);
         }
         catch (e) {
@@ -281,17 +285,61 @@ module.exports = {
         }
     },
 
-    getPublicIp: async ( req, res ) => {
+    getPublicIp: async (req, res) => {
         try {
-	    var ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+            var ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
 
 
-            res.send( {ip} );
+            res.send({ ip });
         }
         catch (e) {
             console.error(e);
             res.serverError(e);
         }
-   }
+    },
+
+    //#region for api v2
+    getUsers: async (req, res) => {
+        try {
+            let where = {}, response = {};
+            if (req.param("where")) {
+                if (Object.prototype.toString.call(req.param("where")) === '[object String]')
+                    where.where = JSON.parse(req.param("where"));
+                else if (Object.prototype.toString.call(req.param("where")) === '[object Object]')
+                    where.where = req.param("where");
+            }
+
+            if (req.param("sort")) {
+                where.sort = req.param("sort");
+            }
+
+            if (req.param("limit")) {
+                where.limit = Number(req.param("limit"));
+            }
+
+            if (req.param("page") && where.limit) {
+                let skip = (Number(req.param("page")) - 1) * where.limit;
+                where.skip = skip;
+            }
+
+            if (_.isUndefined(where.limit) === false && _.isUndefined(where.skip) === false) {
+                response.totalResults = await User.count({ where: where.where });
+                response.datas = await User.find(where);
+                response.page = Number(req.param("page"));
+                response.limit = where.limit;
+                return res.pagination(response);
+            }
+
+            response = await User.find(where);
+            res.v2(response);
+
+        }
+        catch (e) {
+            console.error(e);
+            res.serverError(e);
+        }
+    }
+
+    //#endregion
 };
 

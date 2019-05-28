@@ -1,0 +1,709 @@
+{
+  "swagger": "2.0",
+  "info": {
+      "description": "Seafood Souq API",
+      "version": "1.0.0",
+      "title": "Swagger Seafood Souq API",
+      "termsOfService": "http://seafoodsouq.com/terms/api",
+      "contact": {
+          "email": "tt@seafoodsouq.com"
+      },
+      "license": {
+          "name": "Apache 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+  },
+  "host": "devapi.seafoodsouq.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "user",
+      "description": "Operations about user"
+  },{
+      "name": "store",
+      "description": ""
+  },{
+      "name": "product",
+      "description": ""
+  }],
+  "schemes": ["https", "http"],
+  "paths": {
+    "/api/login": {
+      "put": {
+        "tags": ["user"],
+        "summary": "Login user and create access token on success",
+        "operationId": "entrance/login",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Login user and create access token on success",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "email": {
+                      "type": "string"
+                  },
+                  "password": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+            
+          },
+          "401": {
+              "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/signup": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Register a new user",
+        "operationId": "entrance/signup",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Login user and create access token on success",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "email": {
+                      "type": "string"
+                  },
+                  "password": {
+                      "type": "string"
+                  },
+                  "firstName": {
+                      "type": "string"
+                  },
+                  "lastName": {
+                      "type": "string"
+                  },
+                  "dataExtra": {
+                      "type": "object"
+                  },
+                  "role": {
+                      "type": "number"
+                  },
+                  "logoCompany": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+            
+          },
+          "401": {
+              "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/user/email/{email}/": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Check if email exist",
+        "operationId": "UserController.emailExist",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "email",
+          "in": "path",
+          "description": "Email to check",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "true = exist, false = no exist"
+            
+          }
+        }
+      }
+    },
+    "/api/verification/{id}/{code}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Verify user account",
+        "operationId": "UserController.verificationCode",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "user id to verify",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "code",
+          "in": "path",
+          "description": "code generated for the user on registration",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "{ message: '' }"
+            
+          }
+        }
+      }
+    },
+    "/api/user/admins": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get all admins users",
+        "operationId": "UserController.getAdmins",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+           "description": "successful operation",
+            "schema": {
+                "$ref": "#/definitions/User"
+            }
+            
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    "/user-not-verified": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get all users with verification pending",
+        "operationId": "UserController.getUsersNotVerfied",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "skip",
+          "in": "query",
+          "description": "Records to skip for continue pagination",
+          "required": true,
+          "type": "string"
+        },{
+          "name": "limit",
+          "in": "query",
+          "description": "Number of records in each page",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+           "description": "successful operation"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    "/user/ip": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get real user IP ",
+        "operationId": "UserController.getPublicIp",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+           "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/api/user/forgot": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Request password reset code by email",
+        "operationId": "UserController.resetEmail",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "email",
+          "in": "body",
+          "description": "user id to verify",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+                "email": {
+                "type": "string"
+              } 
+            }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "{ msg: '' }"
+            
+          }
+        }
+      }
+    },
+    "/api/user/password": {
+      "put": {
+        "tags": ["user"],
+        "summary": "Reset password",
+        "operationId": "UserController.changePassword",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Reset Password",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "code": {
+                      "type": "string"
+                  },
+                  "password": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "{ msg: '' }"
+          }
+        }
+      }
+    },
+    "/api/user/update-password": {
+      "put": {
+        "tags": ["user"],
+        "summary": "Update password using current password",
+        "operationId": "UserController.updatePassword",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "Update password using current password",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "email": {
+                      "type": "string"
+                  },
+                  "password": {
+                      "type": "string"
+                  },
+                  "newPassword": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "{ msg: 'success' }"
+          },
+          "400": {
+            "description": "user not found!"
+          },
+          "500": {
+            "description": "Password attempt did not match already-encrypted version"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    "/user/status/{id}/{status}": {
+      "put": {
+        "tags": ["user"],
+        "summary": "Update user status",
+        "operationId": "UserController.updateStatus",
+        "produces": ["application/json"],
+        "parameters": [ {
+          "name": "id",
+          "in": "path",
+          "description": "user id to update",
+          "required": true,
+          "type": "string"
+        },{
+          "name": "status",
+          "in": "path",
+          "description": "new user status",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "{ msg: 'success' }"
+          },
+          "400": {
+            "description": "not found"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    "/api/user/{id}": {
+      "delete": {
+        "tags": ["user"],
+        "summary": "delete an users",
+        "operationId": "UserController.deleteUser",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "user id to delete",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "{ msg: '' }"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+   
+     "/store/allProducts": {
+      "get": {
+        "tags": ["product"],
+        "summary": "Get all products with Store and Type Information",
+        "operationId": "StoreController.getAllProductsWithTypes",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+           "description": "successful operation",
+            "schema": {
+                "$ref": "#/definitions/Product"
+            }
+            
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    
+    "/api/store": {
+      "get": {
+        "tags": ["store"],
+        "summary": "Get Stores Names ",
+        "operationId": "StoreController.getStoreSimplified",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+           "description": "successful operation"
+          }
+        },
+        "security":[{"token":[]}]
+      },
+      "post": {
+        "tags": ["store"],
+        "summary": "Register a new store including the images",
+        "operationId": "StoreController.save",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "description": "",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "owner": {
+                      "type": "string"
+                  },
+                  "description": {
+                      "type": "string"
+                  },
+                  "location": {
+                      "type": "string"
+                  },
+                  "logo": {
+                      "type": "object"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+            
+          },
+          "401": {
+              "description": "Unauthorized"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    
+    "/api/store/logo/{id}": {
+      "post": {
+        "tags": ["store"],
+        "summary": "Update or Save the logo store",
+        "operationId": "ImageController.saveLogoStore",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "type": "string"
+        },{
+          "in": "body",
+          "name": "body",
+          "description": "",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "logo": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+              "description": "Unauthorized"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    "/api/store/hero/{id}": {
+      "post": {
+        "tags": ["store"],
+        "summary": "Update or Save the hero image store",
+        "operationId": "ImageController.saveHeroStore",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "type": "string"
+        },{
+          "in": "body",
+          "name": "body",
+          "description": "",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "logo": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+              "description": "Unauthorized"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    "/api/store/gallery/{id}": {
+      "post": {
+        "tags": ["store"],
+        "summary": "Update or Save the gallery",
+        "operationId": "ImageController.saveImagesStore",
+        "produces": ["application/json"],
+        "parameters": [{
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "type": "string"
+        },{
+          "in": "body",
+          "name": "body",
+          "description": "",
+          "required": true,
+          "schema": {
+              "type": "object",
+              "properties": {
+                  "gallery": {
+                      "type": "string"
+                  }
+              }
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+              "description": "Unauthorized"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    
+    "/store/{id}": {
+      "get": {
+        "tags": ["store"],
+        "summary": "Get Store Information with Types",
+        "operationId": "StoreController.getWithTypes",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Store id",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+           "description": "successful operation"
+          }
+        },
+        "security":[{"token":[]}]
+      }
+    },
+    
+    
+      
+  },
+  "securityDefinitions": {
+      "token": {
+          "type": "apiKey",
+          "name": "token",
+          "in": "header"
+      }
+  },
+  "definitions": {
+      "User": {
+          "type": "object",
+          "properties": {
+              "createdAt": {
+                "type": "number"
+              },
+              "updatedAt": {
+                "type": "number"
+              },
+              "id": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "verified": {
+                "type": "boolean"
+              },  
+              "role": {
+                "type": "number"
+              },
+              "dataExtra":{
+                "type": "string"
+              },
+              "verfication": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string"
+              },
+              "logoCompany": {
+                "type": "string"
+              },
+              "firstMileCost": {
+                "type": "number"
+              }
+          },
+          "xml": {
+              "name": "User"
+          }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "price": { "type": "object"},
+          "weight": { "type": "object"},
+          "maximumOrder": {"type":"number"},
+          "cooming_soon": {"type":"boolean"},
+          "brandName": {"type":"string"},
+          "coomingSoon": {"type":"boolean"},
+          "createdAt": {"type":"number"},
+          "updatedAt": {"type":"number"},
+          "id": {"type":"string"},
+          "name": {"type":"string"},
+          "brandname": {"type":"string"},
+          "description": {"type":"string"},
+          "country": {"type":"string"},
+          "processingCountry": {"type":"string"},
+          "city": {"type":"string"},
+          "quality": {"type":"string"},
+          "minimumOrder": {"type":"number"},
+          "hsCode": {"type":"string"},
+          "imagePrimary": {"type":"string"},
+          "images": {"type":"object"},
+          "seller_sku": {"type":"string"},
+          "seafood_sku": {"type":"string"},
+          "SFSAdminFeedback": {"type":"string"},
+          "stock": {"type":"number"},
+          "waterLostRate": {"type":"string"},
+          "mortalityRate": {"type":"number"},
+          "raised": {"type":"object"},
+          "treatment": {"type":"object"},
+          "store": {"type":"object"},
+          "type": {"type":"object"},
+          "descriptor": {"type":"string"},
+          "status": {"type":"string"}
+        },
+        "xml": {
+          "name": "Fish"
+        }
+      },
+      "ApiResponse": {
+          "type": "object",
+          "properties": {
+              "code": {
+                  "type": "integer",
+                  "format": "int32"
+              },
+              "type": {
+                  "type": "string"
+              },
+              "message": {
+                  "type": "string"
+              }
+          }
+      }
+  },
+  "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+  }
+}

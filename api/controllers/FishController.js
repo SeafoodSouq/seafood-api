@@ -57,12 +57,14 @@ module.exports = {
     addFishWithVariations: async (req, res) => {
         try {
             let body = req.body;
-            let seafood_sku = 'var-test';/*await sails.helpers.generateSku(
+            let seafood_sku = await sails.helpers.generateSku(
                 body.store,
-                body.type,
-                '',//body.descriptor,
+                body.parentType,
+                body.specie,
                 body.processingCountry
-            );*/
+            );
+            console.log("\n\n\n", seafood_sku, "\n\n\n");
+
             let newProduct = {
                 type: body.type,
                 store: body.store,
@@ -76,6 +78,7 @@ module.exports = {
                     type: "kg",
                     value: "0"
                 },
+                descriptor: body.descriptor,
                 country: body.country,
                 processingCountry: body.processingCountry,
                 city: body.city,
@@ -92,10 +95,7 @@ module.exports = {
                 status: "5c0866e4a0eda00b94acbdc0", // pending status
                 brandname: body.brandName,
                 hsCode: body.hsCode,
-                acceptableSpoilageRate: body.acceptableSpoilageRate
-            }
-            if (body.hasOwnProperty('descriptor')) {
-                newProduct['descriptor'] = body.descriptor;
+                // acceptableSpoilageRate: body.acceptableSpoilageRate
             }
 
 
@@ -104,8 +104,24 @@ module.exports = {
 
             if (mainFish) {
                 await Promise.all(body.variations.map(async (variation, index) => {
+                    let skuVar = `${seafood_sku}`;
+                    //Para cuando tiene wholeFishWeight y fishPreparation
+                    if (variation.hasOwnProperty('wholeFishWeight') === true && variation.hasOwnProperty('fishPreparation') === true) {
+                        let whole = await WholeFishWeight.findOne({ id: variation.wholeFishWeight });
+                        if (whole !== undefined)
+                            skuVar += "-"+ whole.name.substring(0, 1);
+                    } else if (variation.hasOwnProperty('fishPreparation') === true && variation.fishPreparation === "5c93c01465e25a011eefbcc4") {
+                        //Para fillete
+                        skuVar += "-"+ 1;
+                    } else if (variation.hasOwnProperty('fishPreparation') === true) {
+                        //Para trimmings salmon
+                        let trimm = await TrimmingType.findOne({ id: variation.fishPreparation });
+                        if (trimm !== undefined)
+                            skuVar += "-"+ trimm.name.slice(-1);
+                    }
+
                     let newVariation = {
-                        sku: `${seafood_sku}_${index}`,
+                        sku: skuVar,
                         fishPreparation: variation.fishPreparation,
                         fish: mainFish.id
                     }
@@ -158,7 +174,6 @@ module.exports = {
     updateFishWithVariations: async (req, res) => {
         try {
             let body = req.body;
-            let seafood_sku = 'var-test';
             // let update fish information
             let fishBody = {
                 type: body.type,
@@ -172,7 +187,7 @@ module.exports = {
                 perBox: body.perBox,
                 minimumOrder: body.minimumOrder,
                 maximumOrder: body.maximumOrder,
-                acceptableSpoilageRate: body.acceptableSpoilageRate,
+                // acceptableSpoilageRate: body.acceptableSpoilageRate,
                 raised: body.raised,
                 treatment: body.treatment,
                 seller_sku: body.seller_sku,
@@ -200,8 +215,23 @@ module.exports = {
                     newVariation = await Variations.update({ id: variation.idVariation }).set(variationBody).fetch();
                 } else {
                     //create
-                    let sku = `${seafood_sku}`;
-                    variationBody['sku'] = sku;
+                    let skuVar = `${fishUpdated[0].seafood_sku}`;
+                    //Para cuando tiene wholeFishWeight y fishPreparation
+                    if (variation.hasOwnProperty('wholeFishWeight') === true && variation.hasOwnProperty('fishPreparation') === true) {
+                        let whole = await WholeFishWeight.findOne({ id: variation.wholeFishWeight });
+                        if (whole !== undefined)
+                            skuVar += "-"+ whole.name.substring(0, 1);
+                    } else if (variation.hasOwnProperty('fishPreparation') === true && variation.fishPreparation === "5c93c01465e25a011eefbcc4") {
+                        //Para fillete
+                        skuVar += "-"+ 1;
+                    } else if (variation.hasOwnProperty('fishPreparation') === true) {
+                        //Para trimmings salmon
+                        let trimm = await TrimmingType.findOne({ id: variation.fishPreparation });
+                        if (trimm !== undefined)
+                            skuVar += "-"+ trimm.name.slice(-1);
+                    }
+                    let sku = `${fishUpdated[0].seafood_sku}`;
+                    variationBody['sku'] = skuVar;
                     variationBody['fish'] = body.idProduct;
                     newVariation = await Variations.create(variationBody).fetch();
                 }
@@ -659,7 +689,7 @@ module.exports = {
         try {
             let start = Number(req.params.page);
             --start;
-            let publishedProducts = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' });
+            let publishedProducts = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' }).sort('name ASC').paginate({ page: start, limit: req.params.limit });
             let products_ids = [];
             publishedProducts.map((item) => {
                 products_ids.push(item.id);
@@ -700,6 +730,11 @@ module.exports = {
                 productos.push(m);
                 return m;
             }));
+            productos = productos.sort(function IHaveAName(a, b) { // non-anonymous as you ordered...
+                return b.name < a.name ?  1 // if b should come earlier, push a to end
+                     : b.name > a.name ? -1 // if b should come later, push a to begin
+                     : -1;                   // a and b are equal
+            });
 
 
             /*productos = await Promise.all(productos.map(async function (m) {
@@ -710,7 +745,7 @@ module.exports = {
                 return m;
             }));*/
 
-            let arr = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' }),
+            let arr = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' }).sort('name ASC'),
                 page_size = Number(req.params.limit), pages = 0;
             console.log(arr.length, Number(arr.length / page_size));
             if (parseInt(arr.length / page_size, 10) < Number(arr.length / page_size)) {

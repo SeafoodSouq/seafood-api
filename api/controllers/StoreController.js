@@ -6,7 +6,7 @@ const mmm = require('mmmagic'),
 const rimraf = require('rimraf');
 const isWin = process.platform === "win32";
 const DIR = path.join(__dirname, "../../images/store/sfs");
-
+const concatNameVariation = require("./ItemShoppingController").concatNameVariation;
 
 module.exports = {
     save: async (req, res) => {
@@ -65,19 +65,19 @@ module.exports = {
             let store = await Store.findOne({ id });
             store.fishs = await Fish.find({ store: store.id }).populate("type").populate("status")
 
-	    //fish['variations'] = [];
-            await Promise.all( store.fishs.map( async ( fish ) => {
-                let variations = await Variations.find( { fish: fish.id } );
+            //fish['variations'] = [];
+            await Promise.all(store.fishs.map(async (fish) => {
+                let variations = await Variations.find({ fish: fish.id });
 
 
-                await Promise.all( variations.map( async ( variation, index ) => {
+                await Promise.all(variations.map(async (variation, index) => {
 
-                    variations[index]['prices'] = await VariationPrices.find( { variation: variation.id } );
+                    variations[index]['prices'] = await VariationPrices.find({ variation: variation.id });
 
 
-                } ) )
-                fish['variations']=variations;
-            } ) )
+                }))
+                fish['variations'] = variations;
+            }))
 
             res.json(store);
         }
@@ -283,176 +283,181 @@ module.exports = {
         }
     },
 
-    getStoreOrders: async ( req, res ) => {
-        let userID = req.param("id");        
-        let status = req.param("status") ;
-        let store = await Store.find( { where: { owner: userID } }  );
+    getStoreOrders: async (req, res) => {
+        let userID = req.param("id");
+        let status = req.param("status");
+        let store = await Store.find({ where: { owner: userID } });
 
-        if( store === undefined ) 
+        if (store === undefined)
             return res.status(400).status("not found");
 
-        let storeIds = []; 
-        store.map( item => {
-            storeIds.push( item.id );
-        } )
+        let storeIds = [];
+        store.map(item => {
+            storeIds.push(item.id);
+        })
 
-        let storeFishes = await Fish.find( { store: storeIds } );  
-         // end get buyer information
+        let storeFishes = await Fish.find({ store: storeIds });
+        // end get buyer information
 
         let storeFishesIds = [];
-        storeFishes.map( item => {
+        storeFishes.map(item => {
             storeFishesIds.push(item.id);
-        } )
+        })
 
-        itemsBuyed = await ItemShopping.find( { 
-            where: { 
-                fish: storeFishesIds 
-            } 
-        } );
+        itemsBuyed = await ItemShopping.find({
+            where: {
+                fish: storeFishesIds
+            }
+        });
 
-        let ordersIds = []; 
-        itemsBuyed.map( item => {
-            ordersIds.push( item.shoppingCart );
-        } )
+        let ordersIds = [];
+        itemsBuyed.map(item => {
+            ordersIds.push(item.shoppingCart);
+        })
 
-        let StoreOrders = await ShoppingCart.find( { 
-            where: 
-            { 
-                id: ordersIds, 
+        let StoreOrders = await ShoppingCart.find({
+            where:
+            {
+                id: ordersIds,
                 status: 'paid'
             },
             sort: 'updatedAt DESC'
-        } ).populate("buyer").populate("items");
+        }).populate("buyer").populate("items");
 
         ordersShipped = [];
         ordersNotShipped = [];
 
-        await Promise.all( StoreOrders.map( async order => {
-                order.allShipped = true;
-                await Promise.all( order.items.map( async item => {
-                    itemFish = await Fish.findOne(  item.fish );
-                    item['fish'] = itemFish;
-                        if( item.status == '5c017ae247fb07027943a404' || item.status == '5c017af047fb07027943a405' ) {
-                            order.allShipped = false;
-                        }            
-                    } )
-                )
-                if( order.allShipped )
-                    ordersShipped.push( order );
-                else 
-                    ordersNotShipped.push( order );
-            } )
+        await Promise.all(StoreOrders.map(async order => {
+            order.allShipped = true;
+            order.items = await Promise.all(order.items.map(async item => {
+                itemFish = await Fish.findOne(item.fish);
+                item['fish'] = itemFish;
+                if (item.status == '5c017ae247fb07027943a404' || item.status == '5c017af047fb07027943a405') {
+                    order.allShipped = false;
+                }
+                item = await concatNameVariation(item);
+                return item;
+            })
+            )
+            if (order.allShipped)
+                ordersShipped.push(order);
+            else
+                ordersNotShipped.push(order);
+        })
         )
-        
-        if( status == 'shipped' )
-            res.status(200).json( ordersShipped );
-        else
-            res.status(200).json( ordersNotShipped );
-    },
-    getStoreOrdersByItemStatus: async ( req, res ) => {
-        let userID = req.param("owner_id");        
-        let status = req.param("status_id") ;
-        let store = await Store.find( { where: { owner: userID } }  );
 
-        if( store === undefined ) 
+        if (status == 'shipped')
+            res.status(200).json(ordersShipped);
+        else
+            res.status(200).json(ordersNotShipped);
+    },
+    getStoreOrdersByItemStatus: async (req, res) => {
+        let userID = req.param("owner_id");
+        let status = req.param("status_id");
+        let store = await Store.find({ where: { owner: userID } });
+
+        if (store === undefined)
             return res.status(400).status("not found");
 
-        let storeIds = []; 
-        store.map( item => {
-            storeIds.push( item.id );
-        } )
+        let storeIds = [];
+        store.map(item => {
+            storeIds.push(item.id);
+        })
 
-        let storeFishes = await Fish.find( { store: storeIds } );  
-         // end get buyer information
+        let storeFishes = await Fish.find({ store: storeIds });
+        // end get buyer information
 
         let storeFishesIds = [];
-        storeFishes.map( item => {
+        storeFishes.map(item => {
             storeFishesIds.push(item.id);
-        } )
+        })
 
-        itemsBuyed = await ItemShopping.find( { 
-            where: { 
-                fish: storeFishesIds 
-            } 
-        } );
+        itemsBuyed = await ItemShopping.find({
+            where: {
+                fish: storeFishesIds
+            }
+        });
 
-        let ordersIds = []; 
-        itemsBuyed.map( item => {
-            ordersIds.push( item.shoppingCart );
-        } )
+        let ordersIds = [];
+        itemsBuyed.map(item => {
+            ordersIds.push(item.shoppingCart);
+        })
 
-        let StoreOrders = await ShoppingCart.find( { 
-            where: 
-            { 
-                id: ordersIds, 
+        let StoreOrders = await ShoppingCart.find({
+            where:
+            {
+                id: ordersIds,
                 status: 'paid'
             },
             sort: 'updatedAt DESC'
-        } ).populate("buyer").populate("items");
+        }).populate("buyer").populate("items");
 
         let statusOrders = [];
-        
-        await Promise.all( StoreOrders.map( async order => {
-                order.allShipped = true;
-                let shouldGetOrder = false;
-                await Promise.all( order.items.map( async item => {
-                    if( item.status == status ) {
-                        itemFish = await Fish.findOne(  item.fish );
-                        item['fish'] = itemFish;                    
-                        shouldGetOrder = true;
-                    }
-                    } )
-                )
-                if( shouldGetOrder )
-                    statusOrders.push( order );
-            } )
+
+        await Promise.all(StoreOrders.map(async order => {
+            order.allShipped = true;
+            let shouldGetOrder = false;
+            order.items = await Promise.all(order.items.map(async item => {
+                if (item.status == status) {
+                    itemFish = await Fish.findOne(item.fish);
+                    item['fish'] = itemFish;
+                    item = await concatNameVariation(item);
+                    shouldGetOrder = true;
+                }
+            })
+            )
+            if (shouldGetOrder)
+                statusOrders.push(order);
+        })
         )
-           
-       res.status(200).json( statusOrders );
+
+        res.status(200).json(statusOrders);
     },
-    getStoreOrderItems: async (req, res) =>{
-        let userID =  req.param("owner");
+    getStoreOrderItems: async (req, res) => {
+        let userID = req.param("owner");
         let shoppingCartID = req.param('shoppingCartID');
 
         // get buyer information
-        let shoppingCart = await ShoppingCart.findOne( { where: shoppingCartID } ).populate('buyer');
+        let shoppingCart = await ShoppingCart.findOne({ where: shoppingCartID }).populate('buyer');
         // end get buyer information
-        
-        let store = await Store.find( { where: { owner: userID } }  );
-        
-        if( store === undefined ) 
+
+        let store = await Store.find({ where: { owner: userID } });
+
+        if (store === undefined)
             return res.status(400).status("not found");
-        
-            console.log( store );
-        let storeIds = []; 
-        store.map( item => {
-            storeIds.push( item.id );
-        } )
+
+        console.log(store);
+        let storeIds = [];
+        store.map(item => {
+            storeIds.push(item.id);
+        })
         console.log(storeIds);
-        let storeFishes = await Fish.find( { store: storeIds } );
+        let storeFishes = await Fish.find({ store: storeIds });
 
         let storeFishesIds = [];
-        storeFishes.map( item => {
+        storeFishes.map(item => {
             storeFishesIds.push(item.id);
-        } )
+        })
         //console.log( 'shoppingCart: ', shoppingCartID );
         //console.log('fishes ids: ', storeFishesIds);
-        let items = await ItemShopping.find( 
-            { 
-                where: 
-                { 
+        let items = await ItemShopping.find(
+            {
+                where:
+                {
                     and: [
                         { fish: storeFishesIds },
-                        { shoppingCart: shoppingCartID } 
+                        { shoppingCart: shoppingCartID }
 
                     ]
-                } 
-            } 
+                }
+            }
         ).populate("fish").populate("shoppingCart").populate("status").sort('createdAt DESC');
-        
-        items.map( item => {
+
+        items = await Promise.all(items.map(async item => {
             item.shoppingCart = shoppingCart;
-        } )
+            item = await concatNameVariation(item);
+            return item;
+        }));
 
         res.status(200).json(items);
 

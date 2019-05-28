@@ -4,7 +4,47 @@ const path = require('path');
 const IMAGES = path.resolve(__dirname, '../../images/');
 const rimraf = require("rimraf");
 var mmm = require('mmmagic'),
-    Magic = mmm.Magic;
+    Magic = mmm.Magic,
+    compress_images = require('compress-images'),
+    findRemoveSync = require('find-remove'),
+    imageSize = { width: 800, height: null }
+folderCompress = "compress";
+
+const deleteImagesF = async pat =>{
+    return findRemoveSync(pat.replace(/\\/g, '/'), { maxLevel: 1, extensions: ".jpg,.JPG,.jpeg,.JPEG,.png,.svg,.gif".split(",") });
+}
+const extractNewName = (name, i, extension) => {
+    extension = extension || "jpg";
+    i = i || 0;
+    return name.replace(/\s+/g, '-').replace(".", "").toLowerCase() + new Date().getTime() + "" + (i + 3) + "." + extension;
+}
+
+const compressImageFolder = async (inputPath, outputPath) => {
+
+    inputPath += '*.{jpg,JPG,jpeg,JPEG,png,svg,gif}';
+    inputPath = path.resolve(inputPath).replace(/\\/g, '/'); //.replace(/\\/g, "\\$&");
+    outputPath = path.resolve(outputPath).replace(/\\/g, '/') + "/" //.replace(/\\/g, "\\$&");
+    // console.log(inputPath, outputPath);
+    await new Promise(resolve => {
+        compress_images(inputPath, outputPath,
+            { compress_force: false, statistic: true, autoupdate: true },
+            false,
+            { jpg: { engine: 'mozjpeg', command: ['-quality', '60'] } },
+            { png: { engine: 'pngquant', command: ['--quality=20-50'] } },
+            { svg: { engine: 'svgo', command: '--multipass' } },
+            { gif: { engine: 'gifsicle', command: ['--colors', '64', '--use-col=web'] } },
+            function (error, completed, statistic) {
+                console.log('-------------');
+                console.log(error);
+                console.log(completed);
+                console.log(statistic);
+                console.log('-------------', path.resolve(outputPath, "../").replace(/\\/g, '/'));
+                let resultDeletes = deleteImagesF(path.resolve(outputPath, "../"));
+                console.log(resultDeletes);
+                resolve();
+            });
+    });
+}
 
 const writeImage = async function (nameFile, directory, image) {
     return new Promise(function (resolve, reject) {
@@ -164,14 +204,14 @@ const multipleImagesUpload = async function (req, res) {
     }
 
     let imagesName = [], i = 0;
-    ////console.log(req);
+
     req.file("images").upload({
         dirname,
         maxBytes: 70000000,
         saveAs: function (stream, cb) {
             // changin name to sku format
             let newName = stream.filename;
-            newName = newName.replace(/\s+/g, '-').toLowerCase() + new Date().getTime() + "" + (i + 3);
+            newName = extractNewName(newName, i);
             imagesName.push(newName);
             i += 1;
             cb(null, newName);
@@ -193,7 +233,7 @@ const multipleImagesUpload = async function (req, res) {
                 try {
                     let directory = IMAGES + `${"/" + req.params.id + "/" + newName}`;
                     console.log(directory);
-                    await resizeImage(directory, { width: 800, height: null });
+                    await resizeImage(directory, imageSize);
                 }
                 catch (e) {
                     console.error(e);
@@ -201,6 +241,8 @@ const multipleImagesUpload = async function (req, res) {
             }
             i += 1;
         }
+        let directory = IMAGES + "/" + req.params.id + "/";
+        await compressImageFolder(directory, directory + folderCompress);
 
         if (fish.hasOwnProperty("images") && Object.prototype.toString.call(fish.images) === "[object Array]") {
             for (let dir of dirs) {
@@ -427,7 +469,11 @@ module.exports = {
         try {
             let id = req.param("id"), namefile = req.param("namefile");
 
-            let directory = IMAGES + `${"/" + id + "/" + namefile}`;
+            let dirname_old = path.join(IMAGES, id, namefile);
+            let dirname_new = path.join(IMAGES, id, folderCompress, namefile);
+            if (fs.existsSync(dirname_new) === true) directory = dirname_new;
+            else directory = dirname_old;
+
             console.log(directory);
 
             if (!fs.existsSync(directory)) {
@@ -905,30 +951,39 @@ module.exports = {
                 fs.mkdirSync(dirname);
             }
 
+            let newName = "";
             req.file("image")
                 .upload({
                     dirname,
                     maxBytes: 70000000,
                     saveAs: function (stream, cb) {
-                        // changin name to sku format
-                        let newName = stream.filename;
-                        newName = newName.replace(/\s+/g, '-').toLowerCase();
+                        newName = extractNewName(stream.filename);
                         cb(null, newName);
                     }
                 }, async (err, uploadedFiles) => {
 
-                    let valid = false;
-                    for (let file of uploadedFiles) {
-                        let newName = file.filename;
-                        // changin name to sku format
-                        newName = newName.replace(/\s+/g, '-').toLowerCase();
-                        await Fish.update({ id }, { imagePrimary: "/api/images/primary/" + newName + "/" + id });
-                        valid = true;
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+                    //Para eliminar las imagenes que antes 
+                    //habian comprimidas
+                    let dir = path.join(IMAGES, "primary", id, folderCompress);
+                    deleteImagesF(dir);
+                    await Fish.update({ id }, { imagePrimary: "/api/images/primary/" + newName + "/" + id });
+
+                    //for resizing image
+                    try {
+                        let directory = IMAGES + `${"/primary/" + req.params.id + "/" + newName}`;
+                        console.log(directory);
+                        await resizeImage(directory, imageSize);
+                    }
+                    catch (e) {
+                        console.error(e);
                     }
 
-                    if (valid === false) {
-                        return res.status(500).send("field image not found!");
-                    }
+                    let directory = IMAGES + "/primary/" + id + "/";
+                    await compressImageFolder(directory, directory + folderCompress);
+
 
                     res.json({ msg: "success" });
                 })
@@ -942,8 +997,12 @@ module.exports = {
 
     getImagePrimary: async (req, res) => {
         try {
-            let dirname = path.join(IMAGES, "primary", req.param("id"), req.param("namefile"));
-            console.log(dirname);
+            let dirname_old = path.join(IMAGES, "primary", req.param("id"), req.param("namefile"));
+            let dirname_new = path.join(IMAGES, "primary", req.param("id"), folderCompress, req.param("namefile"));
+            let dirname = "";
+            if (fs.existsSync(dirname_new) === true) dirname = dirname_new;
+            else dirname = dirname_old;
+
             if (!fs.existsSync(dirname)) {
                 throw new Error("file not exist");
             }
@@ -988,27 +1047,36 @@ module.exports = {
                 fs.unlinkSync(directory);
             }
 
+            let newName = "";
             req.file("image")
                 .upload({
                     dirname,
                     maxBytes: 70000000,
                     saveAs: function (stream, cb) {
-                        //console.log(stream);
-                        // changin name to sku format
-                        let newName = stream.filename;
-                        newName = newName.replace(/\s+/g, '-').toLowerCase();
+                        newName = extractNewName(stream.filename);
                         cb(null, newName);
                     }
                 }, async (err, uploadedFiles) => {
                     if (err) { return res.serverError(err); }
+                    
+                    //Para eliminar las imagenes que antes 
+                    //habian comprimidas
+                    let dir = path.join(IMAGES, "primary", id, folderCompress);
+                    deleteImagesF(dir);
 
-                    for (let file of uploadedFiles) {
-                        // changin name to sku format
-                        let newName = file.filename;
-                        newName = newName.replace(/\s+/g, '-').toLowerCase();
-                        await Fish.update({ id }, { imagePrimary: "/api/images/primary/" + newName + "/" + id });
+                    await Fish.update({ id }, { imagePrimary: "/api/images/primary/" + newName + "/" + id });
+                    //for resizing image
+                    try {
+                        let directory = IMAGES + `${"/primary/" + id + "/" + newName}`;
+                        console.log(directory);
+                        await resizeImage(directory, imageSize);
+                    }
+                    catch (e) {
+                        console.error(e);
                     }
 
+                    let directory = IMAGES + "/primary/" + id + "/";
+                    await compressImageFolder(directory, directory + folderCompress);
                     res.json({ msg: "success" });
                 })
         }

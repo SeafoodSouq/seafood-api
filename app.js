@@ -64,6 +64,6 @@ if (
   sails.config.environment === "staging"
 ) {
 
-  //console.log = function () { };
+  console.log = function () { };
 
 }

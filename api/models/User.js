@@ -157,6 +157,10 @@ module.exports = {
                     -cip
                     -ex-works`
     },
-  }
-
+  },
+  customToJSON: function () {
+    var obj = this;
+    delete obj.password;
+    return obj;
+  },
 };

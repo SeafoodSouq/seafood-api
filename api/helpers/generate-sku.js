@@ -84,9 +84,9 @@ module.exports = {
       fishes = '0' + fishes;          
   
     // All done.
-    //return exits.success( `${store_name[0].name.substring(0, 3).toUpperCase()}-${category_name[0].name.substring(0, 3).toUpperCase()}-${subcategory_name[0].name.substring(0, 3).toUpperCase()}-${country_name[0].name.substring(0, 3).toUpperCase()}-${fishes}` );
+    return exits.success( `${store_name[0].name.substring(0, 3).toUpperCase()}-${category_name[0].name.substring(0, 3).toUpperCase()}-${subcategory_name[0].name.substring(0, 3).toUpperCase()}-${country_name[0].name.substring(0, 2).toUpperCase()}-${fishes}` );
 
-    return exits.success("seafood_sku_test_");
+    // return exits.success("seafood_sku_test_");
 
   }
 

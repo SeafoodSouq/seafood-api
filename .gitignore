@@ -129,7 +129,7 @@ lib-cov
 *.log
 *.out
 *.pid
-
+swagger/swagger.json
 ################################################
 # for images upload
 ################################################
@@ -150,3 +150,8 @@ email_templates/index.html
 email_templates/data.json
 server_ejs
 server_ejs/node_modules
+
+################################################
+# for log compress image
+################################################
+log/

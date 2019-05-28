@@ -54,7 +54,7 @@ module.exports = {
       firstMileFee  = firstMileCost * inputs.weight;
       shippingFee   = shipping * inputs.weight; //b1
       handlingFee   = inputs.currentCharges.handlingFees * inputs.weight; //b2 //are 3 AED/KG to get the shipment released from Customs.
-      shippingCost  = shippingFee + handlingFee + inputs.currentCharges.lastMileCost; //C = first mile cost + b1 + b2 + last mile cost
+      shippingCost  = handlingFee + inputs.currentCharges.lastMileCost; //C = first mile cost + b1 + b2 + last mile cost
     } else { // Ex Work
       firstMileCost = Number( parseFloat( owner.firstMileCost ) ); //get owner fee
       firstMileFee  = firstMileCost * inputs.weight;

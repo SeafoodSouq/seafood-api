@@ -188,21 +188,21 @@
     <% items.forEach(function(it,index){ %>
     <div class="row content" style="font-family: 'Arial';font-size: 10px;">
       <div class="col col-3">
-          <%= description %>
+          <%= it.description %>
       </div>
       <div class="col col-1"> <%= it.fish.seller_sku %></div>
       <div class="col col-1 align-right"><%= it.itemCharges.weight %></div>
       <div class="col col-1 align-right">KG</div>
-      <div class="col col-2 align-right"><%= it.itemCharges.price %> </div>
+      <div class="col col-2 align-right"><%= ( it.itemCharges.price / currentExchangeRate ).toFixed(2) %> </div>
       <div class="col col-1 align-right"><%= ( (it.itemCharges.weight * it.itemCharges.price) / currentExchangeRate ).toFixed(2)  %></div>
     </div>
-    <%  } ) %>
+    <%  } ) %> 
     <div class="subtotal" style="font-family: 'Arial';font-size: 10px;">
       <div class="col col-5 padding-right">
         <span>Subtotal</span>
       </div>
       <div class="col col-5">
-        <span><%= subTotal  %></span>
+        <span><%= ( Number(subTotal) / currentExchangeRate ).toFixed(2)  %></span>
       </div>
     </div>
     <div class="subtotal" style="font-family: 'Arial';font-size: 10px">
@@ -210,7 +210,7 @@
         <span class="border"><b>TOTAL USD</b></span>
       </div>
       <div class="col col-5">
-        <span class="border"><b><%= total %></b></span>
+        <span class="border"><b><%=  ( Number(total) / currentExchangeRate ).toFixed(2) %></b></span>
       </div>
     </div>
     <div class="clear" style="font-family: 'Arial'; font-size: 10px">

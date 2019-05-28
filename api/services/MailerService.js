@@ -186,7 +186,7 @@ module.exports = {
         email.render('../email_templates/approved_seller',
             await applyExtend({
                 name: name
-            })
+            }) 
         )
             .then(res => {
                 transporter.sendMail({

@@ -50,7 +50,7 @@ module.exports = {
         } ) )
         
         type0.childs = childs0;
-        
+        await FishType.update( { id: type0.id }, { totalFishes: mainCount } );
         
     } ) )    
     return exits.success();

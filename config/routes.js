@@ -10,7 +10,7 @@
 
 module.exports.routes = {
 
-   //  ╦ ╦╔═╗╔╗ ╔═╗╔═╗╔═╗╔═╗╔═╗
+  //  ╦ ╦╔═╗╔╗ ╔═╗╔═╗╔═╗╔═╗╔═╗
   //  ║║║║╣ ╠╩╗╠═╝╠═╣║ ╦║╣ ╚═╗
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
   //'GET /': { action: 'view-homepage-or-redirect' },
@@ -55,7 +55,7 @@ module.exports.routes = {
   'POST  /api/v1/entrance/update-password-and-login': { action: 'entrance/update-password-and-login' },
   'POST  /api/v1/deliver-contact-form-message': { action: 'deliver-contact-form-message' },
 
-  'POST /payfort/authorization': 'PaymentsController.askForAuthorization' ,
+  'POST /payfort/authorization': 'PaymentsController.askForAuthorization',
 
 
 
@@ -64,7 +64,7 @@ module.exports.routes = {
    * USER 
    * 
    */
-   // check if email exist
+  // check if email exist
   'GET /api/user/email/:email/': 'UserController.emailExist',
 
   //Para verificar el codigo
@@ -112,7 +112,7 @@ module.exports.routes = {
   //subir una imagen for a fish
   'POST /api/images': 'ImageController.imagesUpload',
 
-  
+
 
 
   //Para guardar multiples images de un producto
@@ -149,24 +149,24 @@ module.exports.routes = {
    * 
    */
 
-     
+
   /****************
    * Fish Variations
    */
-   "POST /api/variations/add": "FishController.addFishWithVariations",
+  "POST /api/variations/add": "FishController.addFishWithVariations",
 
-   "PUT /api/variations": "FishController.updateFishWithVariations",
+  "PUT /api/variations": "FishController.updateFishWithVariations",
 
 
-   "GET /api/fish/:id/variations/": "FishController.getFishWithVariations",
-   
-   //search variations by weight
-   "POST /fish/filter": "FishController.filterFishWithVariations",
+  "GET /api/fish/:id/variations/": "FishController.getFishWithVariations",
 
-   //add new product and send email
-   "POST /fish":"FishController.addFish",
-   //Para guardar multiples productos
-   "POST /api/fishs": "FishController.saveMulti",
+  //search variations by weight
+  "POST /fish/filter": "FishController.filterFishWithVariations",
+
+  //add new product and send email
+  "POST /fish": "FishController.addFish",
+  //Para guardar multiples productos
+  "POST /api/fishs": "FishController.saveMulti",
 
   //Para eleimnar un producto
   'DELETE /api/fish/:id': 'FishController.delete',
@@ -179,7 +179,7 @@ module.exports.routes = {
 
   //GET pending fishes
   'GET /api/fish/pending': 'FishController.getPendingProducts',
-  
+
   //update fish status
   'PUT /api/fish/:id/status/:statusID': 'FishController.updateStatus',
 
@@ -264,7 +264,7 @@ module.exports.routes = {
   'GET /api/store/orders/:status/user/:id': 'StoreController.getStoreOrders',
 
   // Get all items of the store
-  'GET /api/store/:owner/order/:shoppingCartID': 'StoreController.getStoreOrderItems', 
+  'GET /api/store/:owner/order/:shoppingCartID': 'StoreController.getStoreOrderItems',
 
 
   //Para obtener productos pagados por tienda y items shippingStatus === 'paid'
@@ -313,7 +313,7 @@ module.exports.routes = {
   'GET /api/shoppingcart/orderlogistic': 'ShoppingCartController.getOrderLogistic',
 
   'GET /api/shoppingcart/PDF/:name/:directory': 'ShoppingCartController.sendPDF',
-  
+
   /***********
    * 
    * ITEMS SHOPPING 
@@ -330,7 +330,7 @@ module.exports.routes = {
   'GET /api/ItemShopping/shipping/images/:itemID/:imageIndex': "ImageController.serveShippingImage",
 
   //change status and send emails
-  'PUT /api/itemshopping/:id/:status':"ItemShoppingController.updateItemStatus",
+  'PUT /api/itemshopping/:id/:status': "ItemShoppingController.updateItemStatus",
 
   'GET /api/fish/:id/variation/:variation_id/charges/:weight/:in_AED': 'FishController.getItemCharges',
 
@@ -342,8 +342,8 @@ module.exports.routes = {
   'GET /api/itemshopping/order-number/:orderNumber': 'ItemShoppingController.getAllOrders',
   // get all orders by status and order number
   'GET /api/itemshopping/status/:status/order-number/:orderNumber': 'ItemShoppingController.getAllOrders',
-  
-  
+
+
   // get all orders of buyer
   'GET /api/itemshopping/:buyer/all': 'ItemShoppingController.getBuyerOrders',
   // get all canceled and delivered items
@@ -354,13 +354,13 @@ module.exports.routes = {
   'GET /api/itemshopping/:buyer/order-number/:orderNumber': 'ItemShoppingController.getBuyerOrders',
   // get all orders by status and order number of buyer
   'GET /api/itemshopping/:buyer/status/:status/order-number/:orderNumber': 'ItemShoppingController.getBuyerOrders',
-  
+
   'PUT /api/itemsshopping/updateETA': 'ItemShoppingController.updateBuyerETA',
 
   'POST /api/itemshopping/:id/shipping-documents': 'ItemShopping.uploadShippingDocuments',
 
   'GET /api/itemshopping/:id/shipping-documents/:name': 'Image.getShippingFiles',
-  
+
   /********
    * 
    * FAVORITE FISH
@@ -387,9 +387,9 @@ module.exports.routes = {
   'GET /itemshopping/status/:status': 'ItemShoppingController.getItemsByStatus',
   'GET /itemshopping/payed': 'ItemShoppingController.getPayedItems',
   'GET /itemshopping/cancel': 'ItemShoppingController.getCancelledItems',
-  
+
   //get items by status and order number
-  'GET /itemshopping/payed/:orderNumber':'ItemShoppingController.getPayedItemsByOrderNumber',
+  'GET /itemshopping/payed/:orderNumber': 'ItemShoppingController.getPayedItemsByOrderNumber',
 
   /***********
    * FILES UPLOAD ADMIN
@@ -406,9 +406,9 @@ module.exports.routes = {
 
   "GET /featuredtypes": "FeaturedTypesController.get",
 
-   /******
-   * FEATURED TYPES MENU
-   */
+  /******
+  * FEATURED TYPES MENU
+  */
   "POST /featuredtypes-menu": "FishTypeMenu.saveOrUpdate",
 
   "GET /featuredtypes-menu": "FishTypeMenu.get",
@@ -422,77 +422,77 @@ module.exports.routes = {
 
   "GET /fish/country": "FishController.getDistinctCountry",
 
-   //Para obtener categorias padres
-   'GET /fishTypes/parents': 'FishTypeController.getParentTypes', 
-   'GET /fishTypes/childs': 'FishTypeController.getChildTypes', 
-   'GET /fishTypes/:parent_id/childs': 'FishTypeController.getParentChildTypes', 
+  //Para obtener categorias padres
+  'GET /fishTypes/parents': 'FishTypeController.getParentTypes',
+  'GET /fishTypes/childs': 'FishTypeController.getChildTypes',
+  'GET /fishTypes/:parent_id/childs': 'FishTypeController.getParentChildTypes',
 
-   'GET /fishTypes/parents/with-fishes': 'FishTypeController.getParentsWithFishes',
+  'GET /fishTypes/parents/with-fishes': 'FishTypeController.getParentsWithFishes',
 
-   // get fish type by level
+  // get fish type by level
   'GET /fishType/parents/:fishID': 'FishType.getParentLevel',
 
-   'GET /getTypeLevel': 'FishType.getTypeLevel',
+  'GET /getTypeLevel': 'FishType.getTypeLevel',
 
-   'GET /allFishTypeParents':'FishTypeController.getAllParentsLevel',
-   'GET /fishTypes/Tree': 'FishTypeController.getFishTypeTree',
+  'GET /allFishTypeParents': 'FishTypeController.getAllParentsLevel',
+  'GET /fishTypes/Tree': 'FishTypeController.getFishTypeTree',
 
-   'GET /fishTypes/level/:level': 'FishTypeController.getTypeByLevel',
-   'GET /fishTypes/:parent_id/all_levels': 'FishTypeController.getAllChildsByLevel',
+  'GET /fishTypes/level/:level': 'FishTypeController.getTypeByLevel',
+  'GET /fishTypes/:parent_id/all_levels': 'FishTypeController.getAllChildsByLevel',
 
-   //before_variations
-   'GET /fishTypes/:parent_id/ori_all_levels': 'FishTypeController.ori_getAllChildsByLevel',
+  //before_variations
+  'GET /fishTypes/:parent_id/ori_all_levels': 'FishTypeController.ori_getAllChildsByLevel',
 
 
-   'POST /fish/filter-old': 'FishController.filterProducts',
+  'POST /fish/filter-old': 'FishController.filterProducts',
 
-   'GET /fishTypes/update_count': 'FishTypeController.updateTypeCount',
+  'GET /fishTypes/update_count': 'FishTypeController.updateTypeCount',
 
-   'DELETE /api/fishType/:id': 'FishTypeController.delete',
-   
-   //SHIPPING
-   'GET /shippingRates/countries': 'ShippingRates.getCountryWithShippings',
-   'GET /shippingRates/country/:country/:weight': 'ShippingRates.getShippingRateByWeight',
-   'POST /shippingRates/countries': 'ShippingRates.getCountriesShippingRateByWeight',
+  'DELETE /api/fishType/:id': 'FishTypeController.delete',
 
-   'GET /shippingRates/country/:country/cities/': 'ShippingRates.getCitiesWithShippings',
-   'POST /shippingRates/cities': 'ShippingRates.getCitiesShippingRateByWeight',
+  //SHIPPING
+  'GET /shippingRates/countries': 'ShippingRates.getCountryWithShippings',
+  'GET /shippingRates/country/:country/:weight': 'ShippingRates.getShippingRateByWeight',
+  'POST /shippingRates/countries': 'ShippingRates.getCountriesShippingRateByWeight',
 
-   'POST /shippingRates/bycity': 'ShippingRates.getShippingRateByCity',
+  'GET /shippingRates/country/:country/cities/': 'ShippingRates.getCitiesWithShippings',
+  'POST /shippingRates/cities': 'ShippingRates.getCitiesShippingRateByWeight',
 
-   'GET /countries/cities': 'Countries.getAllCities',
+  'POST /shippingRates/bycity': 'ShippingRates.getShippingRateByCity',
 
-   'POST /shipping/:id/upload/': 'Image.uploadShippingInformation',
+  'GET /countries/cities': 'Countries.getAllCities',
 
-   //PRICING
-   'GET /pricingCharges/history': 'PricingCharges.getPricingChargesHistory',
-   'GET /pricingCharges/current': 'PricingCharges.getCurrentPricingCharges',
+  'POST /shipping/:id/upload/': 'Image.uploadShippingInformation',
 
-   'GET /pricingCharges/fish/:id': 'PricingCharges.getFishPricingCharges',
+  //PRICING
+  'GET /pricingCharges/history': 'PricingCharges.getPricingChargesHistory',
+  'GET /pricingCharges/current': 'PricingCharges.getCurrentPricingCharges',
 
-    // COUNTRIES
-    'PUT /api/countries/cityeta': 'Countries.updateCityEta',
+  'GET /pricingCharges/fish/:id': 'PricingCharges.getFishPricingCharges',
 
-    'PUT /api/countries/city': 'Countries.updateCity',
+  // COUNTRIES
+  'PUT /api/countries/cityeta': 'Countries.updateCityEta',
 
-    'PUT /api/countries/city/delete': 'Countries.deleteCity',
+  'PUT /api/countries/city': 'Countries.updateCity',
 
-    'GET /api/countries/withCities': 'Countries.getCountriesWithCities',
+  'PUT /api/countries/city/delete': 'Countries.deleteCity',
 
-    // XERO Invoice services
-    'GET /xero/connect': 'Xero.connect',
+  'GET /api/countries/withCities': 'Countries.getCountriesWithCities',
 
-    //trimming
-    'GET /storeTrimming/store/:store': 'StoreTrimming.getStoreTrimming',
+  // XERO Invoice services
+  'GET /xero/connect': 'Xero.connect',
 
-    //Order Status
-    'GET /api/orderStatus/logistic': 'OrderStatus.getLogisticOrderstatus',
+  //trimming
+  'GET /storeTrimming/store/:store': 'StoreTrimming.getStoreTrimming',
 
-    'GET /api/orderStatus/payments': 'OrderStatus.getPaymentOrderstatus',
+  //Order Status
+  'GET /api/orderStatus/logistic': 'OrderStatus.getLogisticOrderstatus',
 
-    // Get all orders by status
-    'GET /api/store/:owner_id/order/status/:status_id': 'StoreController.getStoreOrdersByItemStatus',
-  
+  'GET /api/orderStatus/payments': 'OrderStatus.getPaymentOrderstatus',
+
+  // Get all orders by status
+  'GET /api/store/:owner_id/order/status/:status_id': 'StoreController.getStoreOrdersByItemStatus',
+
   /*****
    * 
    * DOSUSIGN
@@ -500,7 +500,7 @@ module.exports.routes = {
    * 
    */
   'POST /docusign': 'DocusignController.sentTemplate',
-  
+
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗
   //  ║║║║╣ ╠╩╗╠═╣║ ║║ ║╠╩╗╚═╗
   //  ╚╩╝╚═╝╚═╝╩ ╩╚═╝╚═╝╩ ╩╚═╝
@@ -511,13 +511,65 @@ module.exports.routes = {
 
   //Docusign
   'POST /response-docusign': 'DocusignController.resposeEnvelope',
- 
+
   //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗
   //  ║║║║╚═╗║    ╠╦╝║╣  ║║║╠╦╝║╣ ║   ║ ╚═╗
   //  ╩ ╩╩╚═╝╚═╝  ╩╚═╚═╝═╩╝╩╩╚═╚═╝╚═╝ ╩ ╚═╝
   '/terms': '/legal/terms',
   '/logout': '/api/v1/account/logout',
 
-  
-  
+
+  //#region for api v2
+  /****
+   * 
+   * FOR USERS
+   * 
+   * 
+   */
+  "GET /api/v2/user": "UserController.getUsers",
+
+  // Shipping
+
+  'GET /api/v2/countriesWithShipping': "ShippingRatesController.getCountriesWithShippings",
+
+  /****
+   * 
+   * 
+   * ITEMS SHOPPING
+   * 
+   * 
+   */
+  //get orders for buyer
+  'GET /api/v2/itemshopping/:buyer/all': 'ItemShoppingController.getBuyerOrdersPagination',
+
+  'GET /api/v2/itemshopping/:buyer/status/:status': 'ItemShoppingController.getBuyerOrdersPagination',
+
+  'GET /api/v2/itemshopping/:buyer/order-number/:orderNumber': 'ItemShoppingController.getBuyerOrdersPagination',
+
+  'GET /api/v2/itemshopping/:buyer/status/:status/order-number/:orderNumber': 'ItemShoppingController.getBuyerOrdersPagination',
+
+  //Get orders for admin
+  'GET /api/v2/itemshopping/all': 'ItemShoppingController.getAllOrdersPagination', 
+
+  'GET /api/v2/itemshopping/status/:status': 'ItemShoppingController.getAllOrdersPagination',
+
+  'GET /api/v2/itemshopping/order-number/:orderNumber': 'ItemShoppingController.getAllOrdersPagination',
+
+  'GET /api/v2/itemshopping/status/:status/order-number/:orderNumber': 'ItemShoppingController.getAllOrdersPagination',
+
+  'GET /api/v2/orderStatus/logistic': 'OrderStatus.getLogisticOrderstatusPagination',
+
+  'GET /api/v2/orderStatus/payments': 'OrderStatus.getPaymentOrderstatusPagination',
+
+  'GET /api/v2/shoppingcart/orderlogistic': 'ShoppingCartController.getOrderLogisticPagination',
+
+
+  'GET /api/v2/itemshopping/payed': 'ItemShoppingController.getPayedItemsPagination',
+
+  'GET /itemshopping/cancel': 'ItemShoppingController.getCancelledItems',
+
+  //get items by status and order number
+  // 'GET /api/v2/itemshopping/payed/:orderNumber': 'ItemShoppingController.getPayedItemsByOrderNumber',
+
+  //#endregion
 };

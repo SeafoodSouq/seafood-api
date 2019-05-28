@@ -69,7 +69,7 @@ module.exports = {
 
 
     },
-    sellerPurchaseOrder: async (fullName, cart, itemsShopping, orderNumber, sellerAddress, counter, currentExchangeRate, buyerETA, incoterms, description, subTotal, total) => {
+    sellerPurchaseOrder: async (fullName, cart, itemsShopping, orderNumber, sellerAddress, counter, currentExchangeRate, buyerETA, incoterms, subTotal, total) => {
         itemsShopping = verifiedWholeFishWeight(itemsShopping);
         var compiled = await ejs.compile(fs.readFileSync(__dirname + '/../../pdf_templates/PurchaseOrder.html', 'utf8'));
         //console.log( 'cart', cart );
@@ -106,7 +106,6 @@ module.exports = {
                 api_url: api_url,
                 port_of_loading: portOfLoading.name,
                 incoterms,
-                description,
                 subTotal,
                 total
             }

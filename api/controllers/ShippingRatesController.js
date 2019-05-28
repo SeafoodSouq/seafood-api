@@ -193,8 +193,37 @@ module.exports = {
                     })
             });
 
+            let countriesWithShippingRates = await Countries.find( { code: countries } ).sort( [{ name: 'ASC' }] )
+
 
             res.json(countries.sort());
+        }
+        catch (e) {
+            console.error(e);
+            res.serverError(e);
+        }
+    },
+    getCountriesWithShippings: async (req, res) => {
+        try {
+            var db = ShippingRates.getDatastore().manager;
+            var shippingRates = db.collection(ShippingRates.tableName);
+
+            let countries = await new Promise((resolve, reject) => {
+                shippingRates.distinct("sellerCountry", {},
+                    function (err, docs) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        if (docs) {
+                            resolve(docs);
+                        }
+                    })
+            });
+
+            let countriesWithShippingRates = await Countries.find( { code: countries } ).sort( [{ name: 'ASC' }] )
+
+
+            res.v2( countriesWithShippingRates );
         }
         catch (e) {
             console.error(e);
