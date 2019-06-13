@@ -7,7 +7,7 @@ var mmm = require('mmmagic'),
     Magic = mmm.Magic,
     compress_images = require('compress-images'),
     findRemoveSync = require('find-remove'),
-    imageSize = { width: 800, height: null }
+    imageSize = { width: 800, height: null },
 folderCompress = "compress";
 
 //for logos sellers check if exist folder, if not create folder
@@ -213,7 +213,7 @@ function getMimeFile(dirname) {
     return new Promise(function (resolve, reject) {
         var magic = new Magic(mmm.MAGIC_MIME_TYPE);
         magic.detectFile(dirname, function (err, result) {
-            if (err) { return reject(err); };
+            if (err) { return reject(err); }
             console.log(result);
             resolve(result);
         });
@@ -785,7 +785,7 @@ module.exports = {
 
     multipleImagesCategory: async function (req, res) {
 
-        id = req.param("id");
+        let id = req.param("id");
         let type = await FishType.findOne({ id });
         if (type === undefined) {
             return res.serverError("id not found");
