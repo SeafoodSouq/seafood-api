@@ -40,8 +40,7 @@ module.exports = {
       /*"settlement_reference": req.param('settlement_reference'),*/
       "customer_email": req.param('customer_email'),
       "amount": req.param('amount'),
-      "order_description": req.param('order_description'),
-      "device_fingerprint": req.body.device_fingerprint,
+      "order_description": req.param('order_description'),      
       "customer_ip": req.param("customer_ip")
     };
 
