@@ -697,14 +697,14 @@ module.exports = {
         }
     },
 
-    // getFishWithVariations by weight, price, category, sub category, specie
+    // getFishWithVariations by weight, price, category, sub category, species
     filterFishWithVariations: async (req, res) => {
         try {
             var today = new Date();
             var outOfStockDate = new Date();
             var coomingSoonDate = new Date();
-            outOfStockDate.setDate(today.getDate() + 150);
-            coomingSoonDate.setDate(today.getDate() + 200);
+            outOfStockDate.setDate(today.getDate() + 150); // Make the date so far away it will be second to last
+            coomingSoonDate.setDate(today.getDate() + 200); // artificially make the date the furthest from today
             filterByPricesVariations = false;
             filterByVariations = false;
             filterByFish = false;
