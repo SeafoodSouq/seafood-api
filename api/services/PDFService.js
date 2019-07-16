@@ -173,6 +173,7 @@ module.exports = {
 
         return pdf_name;
     },
+
     buyerInvoiceCODPaid: async (itemsShopping, cart, OrderNumber, storeName, uaeTaxes) => {
         itemsShopping = verifiedWholeFishWeight(itemsShopping);
         console.log('dir name', __dirname);
@@ -220,7 +221,7 @@ module.exports = {
         return pdf_name;
     },
 
-    sellerPurchaseOrder: async (fullName, cart, itemsShopping, orderNumber, sellerAddress, counter, currentExchangeRate, buyerETA, incoterms, subTotal, total) => {
+    sellerPurchaseOrder: async (fullName, cart, itemsShopping, orderNumber, sellerAddress, counter, currentExchangeRate, buyerETA, incoterms, subTotal, total, currency) => {
         itemsShopping = verifiedWholeFishWeight(itemsShopping);
         var compiled = await ejs.compile(fs.readFileSync(__dirname + '/../../pdf_templates/PurchaseOrder.html', 'utf8'));
         //console.log( 'cart', cart );
@@ -258,17 +259,19 @@ module.exports = {
                 port_of_loading: portOfLoading.name,
                 incoterms,
                 subTotal,
-                total
+                total,
+                currency
             }
         );
         let pdf_name = `purchase-order-${orderNumber}-${date_name}-${counter}.pdf`;
         await pdf.create(html).toFile(`./pdf_purchase_order/${pdf_name}`, async () => {
             console.log('pdf done', pdf_name, '\n\n');
-            MailerService.sendCartPaidSellerNotified(fullName, cart, itemsShopping, orderNumber, itemsShopping[0].fish.store.owner.email, pdf_name, buyerETA);
+            MailerService.sendCartPaidSellerNotified(fullName, cart, itemsShopping, orderNumber, itemsShopping[0].fish.store.owner.email, pdf_name, buyerETA, currency);
             let pdf_updated = await ItemShopping.update({ id: itemsShopping.map(it => { return it.id; }) }, { po_path: pdf_name });
         })
         return pdf_name;
     },
+    
     sendPDF: async (req, res, pdf_directory, pdf_name) => {
         let path = `${sails.config.appPath}/${pdf_directory}/${pdf_name}`;
         try {

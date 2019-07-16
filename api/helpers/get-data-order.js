@@ -126,7 +126,9 @@ module.exports = {
         orderNumber: orderNumber,
         url: URL,
         paidDateTime,
-        grandTotal
+        grandTotal,
+        exchangeRates: cart.currentCharges.exchangeRates,
+        forSeller: false
       });
     }
     catch (e) {

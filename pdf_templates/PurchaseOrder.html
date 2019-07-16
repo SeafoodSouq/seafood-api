@@ -214,10 +214,10 @@
       <p><b>U/M</b></p>
     </div>
     <div class="col col-2">
-      <p><b>Unit Price USD</b></p>
+      <p><b>Unit Price <%= currency %></b></p>
     </div>
     <div class="col col-1">
-      <p><b>Amount USD</b></p>
+      <p><b>Amount <%= currency %></b></p>
     </div>
   </div>
   <% items.forEach(function(it,index){ %>
@@ -232,25 +232,25 @@
     <% } %>
     <div class="col col-1"><%= it.itemCharges.weight %></div>
     <div class="col col-1">KG</div>
-    <div class="col col-2"><%= ( it.itemCharges.price / currentExchangeRate ).toFixed(2) %> </div>
-    <div class="col col-1"><%= ( (it.itemCharges.weight * it.itemCharges.price) / currentExchangeRate ).toFixed(2)  %>
+    <div class="col col-2"><%= currency === 'AED' ? Number(it.itemCharges.price).toFixed(2) : ( it.itemCharges.price / currentExchangeRate ).toFixed(2) %> </div>
+    <div class="col col-1"><%= currency === 'AED' ? (it.itemCharges.weight * it.itemCharges.price).toFixed(2) : ( (it.itemCharges.weight * it.itemCharges.price) / currentExchangeRate ).toFixed(2)  %>
     </div>
   </div>
   <%  } ) %>
   <div class="subtotal" style="font-family: 'Arial';font-size: 10px;">
     <div class="col col-5 padding-right">
-      <span>Subtotal USD</span>
+      <span>Subtotal <%= currency %></span>
     </div>
     <div class="col col-5">
-      <span><%= ( Number(subTotal) / currentExchangeRate ).toFixed(2)  %></span>
+      <span><%= currency === 'AED' ? Number(subTotal).toFixed(2) : ( Number(subTotal) / currentExchangeRate ).toFixed(2)  %></span>
     </div>
   </div>
   <div class="subtotal" style="font-family: 'Arial';font-size: 10px">
     <div class="col col-5 padding-right">
-      <span class="border"><b>TOTAL USD</b></span>
+      <span class="border"><b>TOTAL <%= currency %></b></span>
     </div>
     <div class="col col-5">
-      <span class="border"><%= ( Number(subTotal) / currentExchangeRate ).toFixed(2)  %></span>
+      <span class="border"><%= currency === 'AED' ? Number(subTotal).toFixed(2) : ( Number(subTotal) / currentExchangeRate ).toFixed(2)  %></span>
       <!-- <span class="border"><b>< ( Number(total) / currentExchangeRate ).toFixed(2) ></b></span> -->
     </div>
   </div>

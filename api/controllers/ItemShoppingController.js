@@ -399,6 +399,7 @@ module.exports = {
                     //send email to buyer
                     //Obtenemos el store con el owner
                     let _store = await Store.findOne({ id: item.fish.store }).populate("owner")
+                    store.owner = _store.owner;
                     await MailerService.sellerCancelledOrderSeller(_store.owner.firstName + " " + _store.owner.lastName, _store.owner.email, cart, store, item);
                     //send email to admin
                     await MailerService.sellerCancelledOrderAdmin(name, _store.owner.firstName + " " + _store.owner.lastName, cart, store, item);

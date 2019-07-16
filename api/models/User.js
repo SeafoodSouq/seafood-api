@@ -114,6 +114,11 @@ module.exports = {
       type: "number"
     },
 
+    currency:{
+      type: 'string',
+      required: false
+    },
+
     logos: {
       type: "json",
       columnType: "array",

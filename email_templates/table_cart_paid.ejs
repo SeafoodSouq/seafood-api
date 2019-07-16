@@ -46,7 +46,7 @@
                                             <td>Origin</td>
                                             <td>Processing</td>
                                             <td>Qty (KG)</td>
-                                            <td>Total (AED)</td>
+                                            <td>Total (<%= forSeller===true? currency : 'AED' %>)</td>
                                         </tr>
                                         <% items.forEach(function(it,index){ %>
                                         <tr>
@@ -104,29 +104,29 @@
                                                     style="display: block; padding:5px; padding-right: 0px; width: 100%; font-size: 12px;">Charges</span> -->
                                             </td>
                                             <td style="border-top-width: 0 !important;">
-                                                <%=it.quantity.value %>
+                                                <%=it.itemCharges.weight %>
                                             </td>
                                             <td style="border-top-width: 0 !important;">
                                                 <span> &nbsp;&nbsp;&nbsp;&nbsp; </span>
                                                 <span
                                                     style="display: block; padding:5px; padding-right: 0px; margin-bottom: 1px; width: 100%; font-size: 12px; background-color: #d2d2d2;">
-                                                    <%=it.price %>
+                                                    <%=forSeller===true&&currency==='USD'? (Number(it.price.toString().replace(/,/g, '')) / Number(exchangeRates)).toFixed(2) : it.price %>
                                                 </span>
                                                 <span
                                                     style="display: block; padding:5px; padding-right: 0px; margin-bottom: 1px; width: 100%; font-size: 12px; background-color: #d2d2d2;">
-                                                    <%=it.subtotal %>
+                                                    <%=forSeller===true&&currency==='USD'? (Number(it.subtotal.toString().replace(/,/g, '')) / Number(exchangeRates)).toFixed(2) : it.subtotal %>
                                                 </span>
                                                 <span
                                                     style="display: block; padding:5px; padding-right: 0px; margin-bottom: 1px; width: 100%; font-size: 12px; background-color: #d2d2d2;">
-                                                    <%=(Number(it.itemCharges.customsFee) + Number(it.itemCharges.exchangeRateCommission) + Number(it.itemCharges.sfsMarginCost)).toFixed(2) %>
+                                                    <%=forSeller===true&&currency==='USD'? ((Number(it.itemCharges.customsFee) + Number(it.itemCharges.exchangeRateCommission) + Number(it.itemCharges.sfsMarginCost)) / Number(exchangeRates)).toFixed(2) : (Number(it.itemCharges.customsFee) + Number(it.itemCharges.exchangeRateCommission) + Number(it.itemCharges.sfsMarginCost)).toFixed(2) %>
                                                 </span>
                                                 <span
                                                     style="display: block; padding:5px; padding-right: 0px; margin-bottom: 1px; width: 100%; font-size: 12px; background-color: #d2d2d2;">
-                                                    <%=it.itemCharges.shippingCost.cost %>
+                                                    <%=forSeller===true&&currency==='USD'? (Number(it.itemCharges.shippingCost.cost.toString().replace(/,/g, '')) / Number(exchangeRates)).toFixed(2) : it.itemCharges.shippingCost.cost %>
                                                 </span>
                                                 <span
                                                     style="display: block; padding:5px; padding-right: 0px; margin-bottom: 1px; width: 100%; font-size: 12px; background-color: #d2d2d2;">
-                                                    <%=it.itemCharges.uaeTaxesFee %>
+                                                    <%=forSeller===true&&currency==='USD'? (Number(it.itemCharges.uaeTaxesFee.toString().replace(/,/g, '')) / Number(exchangeRates)).toFixed(2) : it.itemCharges.uaeTaxesFee %>
                                                 </span>
                                                 <!-- <span
                                                     style="display: block; padding:5px; padding-right: 0px; margin-bottom: 1px; width: 100%; font-size: 12px; background-color: #d2d2d2;">
@@ -141,9 +141,9 @@
                                         <% }) %>
                                         <tr>
                                             <td colspan="3"></td>
-                                            <td>Grand Total (AED)</td>
+                                            <td>Grand Total (<%= forSeller===true? currency : 'AED' %>)</td>
                                             <td>
-                                                <%=grandTotal %>
+                                                <%=forSeller===true&&currency==='USD'? (Number(grandTotal.toString().replace(/,/g, '')) / Number(exchangeRates)).toFixed(2) : grandTotal %>
                                             </td>
                                         </tr>
                                     </table>
