@@ -79,7 +79,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  user.email,
+                      to: user.email,
                     subject: 'Your Account is Under Review',
                     html: res, // html body
                 }, (error, info) => {
@@ -113,7 +113,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     subject: `New ${roleType} is pending confirmation`,
                     html: res, // html body
                 }, (error, info) => {
@@ -139,7 +139,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'Welcome Onboard, Getting Started with Seafood Souq !',
                     html: res, // html body
                 }, (error, info) => {
@@ -166,7 +166,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'Welcome Onboard, Getting Started with Seafood Souq !',
                     html: res, // html body
                     attachments: [{
@@ -195,7 +195,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'Your Next Steps to Sell On Seafood Souq',
                     html: res, // html body
                 }, (error, info) => {
@@ -223,7 +223,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'Update - Seafood Souq Account',
                     html: res, // html body
                 }, (error, info) => {
@@ -251,7 +251,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'Update - Seafood Souq Account',
                     html: res, // html body
                 }, (error, info) => {
@@ -278,7 +278,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'Password Recovery for Seafood Souq',
                     html: res, // html body
                 }, (error, info) => {
@@ -306,7 +306,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: 'New Message of Contact in Seafood Souq',
                     html: res, // html body
                 }, (error, info) => {
@@ -336,7 +336,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     // subject: `Product #${product.seafood_sku} is awaiting Review`,
                     subject: `Product ${product.name} is awaiting Review`,
                     html: res, // html body
@@ -367,7 +367,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  seller.email,
+                      to: seller.email,
                     // subject: `Product #${product.seafood_sku} is Under Review `,
                     subject: `Product ${product.name} is Under Review `,
                     html: res, // html body
@@ -399,7 +399,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  seller.email,
+                      to: seller.email,
                     subject: `Product ${product.name} was not approved to be listed on Seafood Souq`,
                     html: res, // html body
                 }, (error, info) => {
@@ -429,7 +429,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  seller.email,
+                      to: seller.email,
                     subject: `Product ${product.name} is approved and live on Seafood Souq`,
                     html: res, // html body
                 }, (error, info) => {
@@ -468,7 +468,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailAddress,
+                      to: emailAddress,
                     subject: `Order #${orderNumber} is Placed`,
                     html: res, // html body
                     attachments: [
@@ -522,7 +522,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${orderNumber} is Placed`,
                     html: res, // html body
                     attachments: [
@@ -559,8 +559,8 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                    //  to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
-                     to: 'jos.ojiron@gmail.com', //  'jos.ojiron@gmail.com',
+                    //   to: cart.buyer.email,
+                      to: 'jos.ojiron@gmail.com',
                     subject: `Order #${orderNumber} is Placed`,
                     html: res, // html body
                     attachments: [
@@ -614,7 +614,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${parseInt(orderNumber)} is Delivered`,
                     html: res, // html body
                     attachments: [
@@ -668,7 +668,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     subject: `Order #${orderNumber} is Placed`,
                     html: res, // html body
                 }, (error, info) => {
@@ -701,7 +701,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${cart.orderNumber} is Cancelled`,
                     html: res, // html body
                 }, (error, info) => {
@@ -735,7 +735,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  store.owner.email,
+                      to: store.owner.email,
                     subject: `Order #${cart.orderNumber} is Cancelled`,
                     html: res, // html body
                 }, (error, info) => {
@@ -768,7 +768,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     subject: `Order #${cart.orderNumber} is Cancelled`,
                     html: res, // html body
                 }, (error, info) => {
@@ -801,7 +801,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: 'Your Order has been cancelled !',
                     html: res, // html body
                 }, (error, info) => {
@@ -836,7 +836,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  emailSeller,
+                      to: emailSeller,
                     subject: `Order #${cart.orderNumber} is Cancelled`,
                     html: res, // html body
                 }, (error, info) => {
@@ -870,7 +870,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     subject: `Order #${cart.orderNumber} is Cancelled`,
                     html: res, // html body
                 }, (error, info) => {
@@ -910,7 +910,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${cart.orderNumber} is being Shipped`,
                     html: res, // html body
                 }, (error, info) => {
@@ -948,7 +948,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${cart.orderNumber} has arrived in Dubai !`,
                     html: res, // html body
                 }, (error, info) => {
@@ -981,7 +981,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${parseInt(cart.orderNumber)} is Delivered !`,
                     html: res, // html body
                 }, (error, info) => {
@@ -1014,7 +1014,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Order #${cart.orderNumber} is out for Delivery!`,
                     html: res, // html body
                 }, (error, info) => {
@@ -1047,7 +1047,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  store.owner.email,
+                      to: store.owner.email,
                     subject: `Order #${parseInt(cart.orderNumber)} is Delivered !`,
                     html: res, // html body
                 }, (error, info) => {
@@ -1080,7 +1080,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  cart.buyer.email,
+                      to: cart.buyer.email,
                     subject: `Refund #${cart.orderNumber} completed !`,
                     html: res, // html body
                 }, (error, info) => {
@@ -1114,7 +1114,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     subject: `ETA Warning`,
                     html: res
                 }, (error, info) => {
@@ -1146,7 +1146,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  store.owner.email,
+                      to: store.owner.email,
                     subject: `Order #${cart.orderNumber} payment initiated !`,
                     html: res, // html body
                 }, (error, info) => {
@@ -1171,7 +1171,7 @@ module.exports = {
             .then(res => {
                 transporter.sendMail({
                     from: emailSender,
-                     to: 'jos.ojiron@gmail.com', //  ADMIN_EMAIL,
+                      to: ADMIN_EMAIL,
                     subject: `PRODUCT OUT OF STOCK`,
                     html: res, // html body
                 }, (error, info) => {
