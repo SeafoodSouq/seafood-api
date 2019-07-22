@@ -21,6 +21,9 @@ const getDescription = async (it) => {
 }
 
 const concatNameVariation = require("./ItemShoppingController").concatNameVariation;
+const moment = require('moment');
+// console.log(moment().day(1).format('DD MM YYYY'));
+
 
 module.exports = {
 
@@ -131,7 +134,7 @@ module.exports = {
                 shippingItems = [];
                 await Promise.all(cart.items.map(async (item, indexItem) => {
 
-                    if ( item.variation ) { // validate variation still exists
+                    if (item.variation) { // validate variation still exists
                         let itemStore = await Fish.findOne({ id: item.fish }).populate('store');
                         let boxesNumbers = item.quantity.value;
                         if (itemStore.hasOwnProperty("perBox")) {
@@ -145,7 +148,7 @@ module.exports = {
                         item.country = itemStore.country;
                         item.city = itemStore.city;
                         item.fishCharges = fishCharges;
-    
+
                         //order items by store and putting them into shippingItems
                         let storeIsThere = false
                         let storeIndex = 0;
@@ -163,11 +166,11 @@ module.exports = {
                             shippingItems[storeIndex].items.push(item);
                         }
                     } else {
-                        await ItemShopping.destroy( { id: item.id } );
+                        await ItemShopping.destroy({ id: item.id });
                         delete cart.items[indexItem]
                     }
 
-                    
+
 
                 }))
 
@@ -732,7 +735,7 @@ module.exports = {
             itemsShopping = await Promise.all(itemsShopping.map(async function (it) {
                 it = await concatNameVariation(it);
                 it.description = await getDescription(it);
-                                
+
                 //add fish current to item
                 await ItemShopping.update({ id: it.id }, { fishCurrent: it.fish });
                 it.fishCurrent = it.fish;
@@ -751,11 +754,11 @@ module.exports = {
                     });
                     let stock = await sails.helpers.getEtaStock(it.variation, it.fish.minimumOrder);
 
-                    if (stock === 0) {                        
+                    if (stock === 0) {
                         fish = await Variations.findOne({ id: it.variation }).populate('fish').populate('fishPreparation');
                         await MailerService.outOfStockNotification([fish]);
                     }
-                    it.inventory = inventory;                    
+                    it.inventory = inventory;
                 }
 
                 return it;
@@ -986,6 +989,72 @@ module.exports = {
             PDFService.sendPDF(req, res, directory, name);
         } catch (error) {
             res.serverError(error);
+        }
+    },
+
+    getOrderForTime: async (req, res) => {
+        try {
+            let formatEnter = 'DD/MM/YYYY hh:mma', formatSmall = 'DD/MM/YYYY',
+                prefixStart = '12:00am', prefixEnd = '12:00pm';
+            // let startDateString = moment(Number(req.param('startDate'))).format('DD/MM/YYYY ') + '12:00am',
+            // endDateString = moment(Number(req.param('endDate'))).format('DD/MM/YYYY ') + '12:00pm';
+            let startDateString = moment(req.param('startDate'), 'DD/MM/YYYY').format('DD/MM/YYYY ') + '12:00am',
+                endDateString = moment(req.param('endDate'), 'DD/MM/YYYY').format('DD/MM/YYYY ') + '12:00pm';
+            let type = req.param('type'),
+                startDate = moment(startDateString, formatEnter).toDate().getTime(),
+                endDate = moment(endDateString, formatEnter).toDate().getTime();
+            console.log(startDate, endDate, type);
+            let db = ShoppingCart.getDatastore().manager;
+            let collection = db.collection(ShoppingCart.tableName);
+            collection.find({
+                $and: [
+                    { datePaid: { $gte: startDate } },
+                    { datePaid: { $lte: endDate } },
+                ]
+            }).toArray((err, arr) => {
+                if (err) return res.v2(err);
+                if (type === 'days') {
+                    let arrDays = [];
+                    arr.map(it => {
+                        it.id = it._id.toString();
+                        let index = arrDays.findIndex(day => {
+                            return moment(it.datePaid).format(formatSmall) === moment(day.start).format(formatSmall);
+                        });
+                        console.log(index, moment(it.datePaid).isoWeek());
+                        if (index === -1) {
+                            let start = moment(moment(it.datePaid).format(formatSmall) + prefixStart, formatEnter).toDate().getTime();
+                            let end = moment(moment(it.datePaid).format(formatSmall) + prefixEnd, formatEnter).toDate().getTime();
+                            arrDays.push({ date: moment(it.datePaid).format(formatSmall), start, end, total: Number(it.total) });
+                        }else{
+                            arrDays[index].total += Number(it.total);
+                        }
+                        return it;
+                    });
+                    res.v2(arrDays.map(it => { it.total = it.total.toFixed(2); return it; }));
+                } else {
+                    let arrWeeks = [];
+                    arr.map(it => {
+                        it.id = it._id.toString();
+                        let index = arrWeeks.findIndex(week => {
+                            return moment(it.datePaid).isoWeek() === week.week;
+                        });
+                        console.log(index, moment(it.datePaid).isoWeek());
+                        if (index === -1) {
+                            let start = moment(moment(it.datePaid).isoWeek(), 'W').day(1).format(formatSmall);
+                            let end = moment(moment(it.datePaid).isoWeek(), 'W').day(7).format(formatSmall);
+                            arrWeeks.push({ week: moment(it.datePaid).isoWeek(), start, end, total: Number(it.total) });
+                        }else{
+                            arrWeeks[index].total += Number(it.total);
+                        }
+                        return it;
+                    });
+                    res.v2(arrWeeks.map(it => { it.total = it.total.toFixed(2); return it; }));
+                }
+            });
+        }
+        catch (e) {
+            console.error(e);
+            res.v2(e);
         }
     }
 
