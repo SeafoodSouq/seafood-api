@@ -647,5 +647,7 @@ module.exports.routes = {
   //get data of data is important fron front-end, is necesary for indicate id y types
   'GET /api/v2/get-data': { action: 'get-data' },
 
+  'GET /api/v2/orders/time': 'ShoppingCart.getOrderForTime',
+
   //#endregion
 };
