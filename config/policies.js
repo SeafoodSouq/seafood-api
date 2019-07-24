@@ -58,7 +58,6 @@ module.exports.policies = {
   },
   ShoppingCartController: {
     sendPDF: true,
-    getOrderForTime: true
   },
   DocusignController: {
     resposeEnvelope: true
