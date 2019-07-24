@@ -261,6 +261,15 @@
       </tbody>
     </table>
   </div>
+
+  <div class="subtotal" style="font-family: 'Arial';font-size: 10px;">
+    <div class="col col-90 padding-right">
+      <span>Subtotal</span>
+    </div>
+    <div class="col col-1">
+      <span><%= subTotal  %></span>
+    </div>
+  </div>
   <div class="subtotal" style="font-family: 'Arial';font-size: 10px;">
     <div class="col col-90 padding-right">
       <span>Taxes and Customs</span>
@@ -277,7 +286,7 @@
       <span><%=shippingFees %></span>
     </div>
   </div>
-  
+
   <div class="subtotal" style="font-family: 'Arial';font-size: 10px;">
     <div class="col col-90 padding-right">
       <span>VAT(<%= uaeTaxes %>%)</span>
@@ -286,15 +295,6 @@
       <span><%=vatuaeTaxes %></span>
     </div>
   </div>
-  <div class="subtotal" style="font-family: 'Arial';font-size: 10px;">
-    <div class="col col-90 padding-right">
-      <span>Subtotal</span>
-    </div>
-    <div class="col col-1">
-      <span><%= subTotal  %></span>
-    </div>
-  </div>
-
 
   <!--<table style="float: right; width: 500px;font-size: 10px;font-family: arial" class="col-5 align-right">
       <tr class="subtotal">
