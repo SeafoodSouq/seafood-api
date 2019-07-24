@@ -242,10 +242,12 @@
             <%= it.fishCurrent.country %>
           </td>
           <td class="col col-1">
-            <%= it.fishCurrent.perBox === true ? parseFloat(Number(it.itemCharges.weight) / Number(it.fishCurrent.boxWeight)).toFixed(2) : it.itemCharges.weight %>
+            <!-- <%= it.fishCurrent.perBox === true ? parseFloat(Number(it.itemCharges.weight) / Number(it.fishCurrent.boxWeight)).toFixed(2) : it.itemCharges.weight %> -->
+            <%=it.itemCharges.weight %>
           </td>
           <td class="col col-1">
-            <%=it.fishCurrent.perBox===true? parseInt(Number(it.itemCharges.weight) / Number(it.fishCurrent.boxWeight)) > 1 ? 'BOXES' : 'BOX':'KG' %>
+            <!-- <%=it.fishCurrent.perBox===true? parseInt(Number(it.itemCharges.weight) / Number(it.fishCurrent.boxWeight)) > 1 ? 'BOXES' : 'BOX':'KG' %> -->
+            <%=it.fishCurrent.unitOfSale %>
           </td>
           <td class="col col-1">
             <%=it.fishCurrent.perBox === true ? parseFloat(Number(it.itemCharges.price) * Number(it.fishCurrent.boxWeight)).toFixed(2) : it.itemCharges.price %>
