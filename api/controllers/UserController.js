@@ -151,7 +151,7 @@ module.exports = {
 
             let users = await User.find({ role: 1, status: "accepted" });
             users = users.map(user => {
-                delete user.token;                
+                delete user.token;
                 delete user.certifications;
                 delete user.logos;
                 return user;
@@ -169,7 +169,7 @@ module.exports = {
 
             let imageCtrl = require("./ImageController"),
                 id = req.param("id"),
-                user = await User.destroy({ id }).fetch();
+                user = await User.update({ id }, { status: 'deleted' }).fetch();
 
             if (user.length === 0) {
                 return res.status(400).send("not found");
@@ -326,7 +326,8 @@ module.exports = {
                 else if (Object.prototype.toString.call(req.param("where")) === '[object Object]')
                     where.where = req.param("where");
             }
-
+            //for not get user delete
+            where.where.status = { '!=': 'deleted' };
             if (req.param("sort")) {
                 where.sort = req.param("sort");
             }

@@ -130,7 +130,7 @@ module.exports = {
 
   afterUpdate: async function (cart, next) {
     try{
-      if (typeof cart.paidDateTime === 'string' && it.paidDateTime !== '') {
+      if (typeof cart.paidDateTime === 'string' && cart.paidDateTime !== '') {
         let datePaid = new Date(cart.paidDateTime).getTime();
         await ShoppingCart.update({ id: cart.id }, { datePaid });
       }
