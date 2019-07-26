@@ -781,8 +781,8 @@ module.exports = {
                 status: "paid",
                 paidDateTime: paidDateTime,
                 orderNumber: OrderNumber,
-                orderStatus: OrderStatus
-
+                orderStatus: OrderStatus,
+                datePaid: new Date(paidDateTime).getTime()
             }).fetch();
             //Agregamos el paidDate al cart
             cart.paidDateTime = paidDateTime;
