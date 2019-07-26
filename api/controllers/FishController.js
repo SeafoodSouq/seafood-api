@@ -378,15 +378,19 @@ module.exports = {
 
             // sort fish variations for app
             fishVariations = fishVariations.sort( (a, b) => { // non-anonymous as you ordered...
+		if( a.wholeFishWeight !== null || b.wholeFishWeight !== null ) { 
                 var textA = a.wholeFishWeight.name.toUpperCase();
                 var textB = b.wholeFishWeight.name.toUpperCase();
                 return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+		} else return 0;
                 
             });
             variations = variations.sort( (a, b) => { // non-anonymous as you ordered...
+		if( a.wholeFishWeight !== null || b.wholeFishWeight !== null ) { 
                 var textA = a.wholeFishWeight.name.toUpperCase();
                 var textB = b.wholeFishWeight.name.toUpperCase();
-                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; 
+		} else return 0;
                 
             });
             fishVariations = []
@@ -416,7 +420,23 @@ module.exports = {
             let wholeFishAction = '';
             await Promise.all(
                 variations.map(async variation => {
-                    fish['kgConversionRate'] = variation.kgConversionRate;
+
+	let fishType;
+                    let kgConversionRate;
+                    if( !variation.hasOwnProperty('kgConversionRate') || variation.kgConversionRate == undefined || variation.kgConversionRate == null || variation.kgConversionRate == 0 ) {                        
+                        if( fish.type.hasOwnProperty( 'id' ) ) {
+                          fishType = fish.type.id;
+                        }
+                        //let fishInformation = await FishType.findOne( { id: fishType } ); // we are getting the unit of measure 
+                        let unitOfMeasure = await UnitOfMeasure.findOne( { name: fish.unitOfSale, isActive: true } )
+                        kgConversionRate = unitOfMeasure.kgConversionRate;
+                      } else {
+                        kgConversionRate = variation.kgConversionRate;
+                      }
+
+                    fish['kgConversionRate'] = kgConversionRate;
+
+                    //fish['kgConversionRate'] = variation.kgConversionRate;
                     let inventory = await FishStock.find().where({
                         "date": { '>': unixNow },
                         "variations": variation.id

@@ -72,6 +72,21 @@ module.exports = {
 
     variation = variation[0];
 
+let fishType;
+    let kgConversionRate;
+    if( !variation.variation.hasOwnProperty('kgConversionRate') || variation.variation.kgConversionRate == undefined || variation.variation.kgConversionRate == null || variation.variation.kgConversionRate == 0 ) {                        
+        if( fish.type.hasOwnProperty( 'id' ) ) {
+          fishType = fish.type.id;
+        }
+        //let fishInformation = await FishType.findOne( { id: fishType } ); // we are getting the unit of measure 
+        let unitOfMeasure = await UnitOfMeasure.findOne( { name: fish.unitOfSale, isActive: true } )
+        kgConversionRate = unitOfMeasure.kgConversionRate;
+      } else {
+        kgConversionRate = variation.variation.kgConversionRate;
+      }
+
+      variation.variation['kgConversionRate'] = kgConversionRate;
+
     if ( variation.variation.fishPreparation !== '5c93c01465e25a011eefbcc4' && variation.variation.fishPreparation !== '5c4b9b8e23a9a60223553d04' && variation.variation.fishPreparation !== '5c4b9ba023a9a60223553d05' && variation.variation.fishPreparation !== '5c4b9ba523a9a60223553d06' && variation.variation.fishPreparation !== '5c4b9baa23a9a60223553d07' && variation.variation.fishPreparation !== '5c4b9bae23a9a60223553d08') {
       is_flat_custom = true;
       currentAdminCharges['selectedCustoms'] = currentAdminCharges.flatCustoms;  
