@@ -126,20 +126,6 @@ module.exports = {
       type: 'number',
       required: false
     }
-  },
-
-  afterUpdate: async function (cart, next) {
-    try{
-      if (typeof cart.paidDateTime === 'string' && cart.paidDateTime !== '') {
-        let datePaid = new Date(cart.paidDateTime).getTime();
-        await ShoppingCart.update({ id: cart.id }, { datePaid });
-      }
-      next();
-    }
-    catch(e){
-      console.error(e);
-      next(e);
-    }
   }
 
 };
