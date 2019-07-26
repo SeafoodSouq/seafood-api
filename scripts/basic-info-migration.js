@@ -51,7 +51,7 @@ module.exports = {
       })
       await UnitOfMeasure.create({
         name: "lbs",
-        kgConversionRate: 1,
+        kgConversionRate: 0.453592,
         isActive: true
       })
       await UnitOfMeasure.create({
