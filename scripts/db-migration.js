@@ -41,6 +41,7 @@ module.exports = {
 
     let fishes = await Fish.find().populate('type');
     let newFishVariations = [];
+
     await Promise.all( fishes.map( async fish => {
       let categorySetup = {
         unitOfMeasure: fish.type.unitOfSale !== undefined ? fish.type.unitOfMeasure :  '',
@@ -65,7 +66,9 @@ module.exports = {
       // check if raised is there
       if( !categorySetup.raised.includes( fish.raised ) ) {       
         categorySetup.raised.push( fish.raised );
+        
       }
+
 
       // check if treatment is there
       if( !categorySetup.treatment.includes( fish.treatment ) ) {
@@ -108,7 +111,7 @@ module.exports = {
           }
         variation.wholeFishWeight = fishVar.id;
         // now lets update the id of the trim or package
-        await Variation.update( { id: variation.id } ).set( { wholeFishWeight: fishVar.id } )
+        await Variations.update( { id: variation.id } ).set( { wholeFishWeight: fishVar.id } )
         }
         
         // now let's look for the variations (wholefishweight)
@@ -174,6 +177,27 @@ module.exports = {
 
     await Promise.all( newArray.map( async newVariation => {
       await FishVariations.create( newVariation )
+    } ) )
+
+    // let's fix the raised
+    let fishTypes = await FishType.find();
+
+    await Promise.all( fishTypes.map( async type => {
+      let fishes = await Fish.find( { type: type.id } );
+      let raised = [];
+      let treatment = [];
+
+      fishes.map( fish => {
+        if ( !raised.includes( fish.raised ) ) {
+          raised.push( fish.raised );
+        }
+        if( !treatment.includes( fish.treatment ) ) {
+          treatment.push( fish.treatment );
+        }
+
+      } )
+
+      await FishType.update( { id: type.id } ).set( { raised, treatment } )
     } ) )
     
 

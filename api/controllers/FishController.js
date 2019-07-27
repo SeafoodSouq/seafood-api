@@ -233,6 +233,7 @@ module.exports = {
             await Promise.all(body.variations.map(async variation => {
                 let variationBody = {
                     fishPreparation: variation.fishPreparation,
+                    parentFishPreparation: variation.parentFishPreparation
                 }
                 if (variation.hasOwnProperty('wholeFishWeight')) {
                     variationBody['wholeFishWeight'] = variation.wholeFishWeight;
@@ -421,6 +422,7 @@ module.exports = {
             await Promise.all(
                 variations.map(async variation => {
 
+
 	let fishType;
                     let kgConversionRate;
                     if( !variation.hasOwnProperty('kgConversionRate') || variation.kgConversionRate == undefined || variation.kgConversionRate == null || variation.kgConversionRate == 0 ) {                        
@@ -437,6 +439,7 @@ module.exports = {
                     fish['kgConversionRate'] = kgConversionRate;
 
                     //fish['kgConversionRate'] = variation.kgConversionRate;
+
                     let inventory = await FishStock.find().where({
                         "date": { '>': unixNow },
                         "variations": variation.id
