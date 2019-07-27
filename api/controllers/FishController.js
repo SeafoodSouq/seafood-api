@@ -269,7 +269,7 @@ module.exports = {
                     let sku = `${fishUpdated[0].seafood_sku}`;
                     variationBody['sku'] = skuVar;
                     variationBody['fish'] = body.idProduct;
-                    variationBody['parentFishPreparation'] = body.parentFishPreparation;
+                    variationBody['parentFishPreparation'] = variation.parentFishPreparation;
                     
                     newVariation = await Variations.create(variationBody).fetch();
                 }
