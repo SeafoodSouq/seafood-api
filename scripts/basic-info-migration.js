@@ -109,6 +109,7 @@ module.exports = {
     //fillete and package
     let fillete = await FishPreparation.findOne( { id: '5c93c01465e25a011eefbcc4', parent: '0' } );
     let package = await FishPreparation.findOne( { id: '5d1cc9cd29dc5790fa2537f3', parent: '0' } );
+    let whole = await FishPreparation.findOne( { id: '5d128316ce26cbab9c23e52e', parent: '0' } );
 
     if( fillete ){
       // creating the parent for the current fillete
@@ -124,7 +125,19 @@ module.exports = {
       await FishPreparation.update( { id: fillete.id } ).set( { parent: parentFillete.id } );
       await FishPreparation.update( { parent: fillete.id } ).set( { parent: parentFillete.id } );
       await FishPreparation.update( { name: { contains: 'Trim' } } ).set( { parent: parentFillete.id } );
+    }
 
+    if( whole ){
+      let parentWhole = await FishPreparation.create( {
+        "name": "Whole",
+        "isTrimming" : false,
+        "defaultProccessingParts" : null,
+        "parent" : "0",
+        "identifier" : "whole_parent",
+        "isActive" : true
+      } )
+      await FishPreparation.update( { id: whole.id } ).set( { parent: parentWhole.id } );
+      await FishPreparation.update( { parent: whole.id } ).set( { parent: parentWhole.id } );
     }
 
     if( package ) {
