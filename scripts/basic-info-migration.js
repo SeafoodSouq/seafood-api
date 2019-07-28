@@ -135,7 +135,7 @@ module.exports = {
         "parent" : "0",
         "identifier" : "whole_parent",
         "isActive" : true
-      } )
+      } ).fetch();
       await FishPreparation.update( { id: whole.id } ).set( { parent: parentWhole.id } );
       await FishPreparation.update( { parent: whole.id } ).set( { parent: parentWhole.id } );
     }
