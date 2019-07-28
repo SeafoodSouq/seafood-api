@@ -135,7 +135,7 @@ module.exports = {
                         fish: mainFish.id
                     }
 
-                    if( body.hasOwnProperty('kgConversionRate') && body.kgConversionRate !== null ) {
+                    if (body.hasOwnProperty('kgConversionRate') && body.kgConversionRate !== null) {
                         newVariation['kgConversionRate'] = body.kgConversionRate;
                     }
 
@@ -190,9 +190,9 @@ module.exports = {
     updateFishWithVariations: async (req, res) => {
         try {
             let body = req.body;
-            
-            if ( !body.hasOwnProperty( 'idProduct' ) || body.idProduct === undefined || body.idProduct === null || body.idProduct === '' )
-                res.json( { message: 'Product id not found' } );
+
+            if (!body.hasOwnProperty('idProduct') || body.idProduct === undefined || body.idProduct === null || body.idProduct === '')
+                res.json({ message: 'Product id not found' });
 
             // let update fish information
             let fishBody = {
@@ -240,7 +240,7 @@ module.exports = {
                 }
                 let newVariation;
 
-                if( body.hasOwnProperty('kgConversionRate') && body.kgConversionRate !== null ) {                    
+                if (body.hasOwnProperty('kgConversionRate') && body.kgConversionRate !== null) {
                     variationBody['kgConversionRate'] = body.kgConversionRate;
                 }
                 if (variation.hasOwnProperty('idVariation')) {
@@ -270,7 +270,7 @@ module.exports = {
                     variationBody['sku'] = skuVar;
                     variationBody['fish'] = body.idProduct;
                     variationBody['parentFishPreparation'] = variation.parentFishPreparation;
-                    
+
                     newVariation = await Variations.create(variationBody).fetch();
                 }
 
@@ -333,11 +333,17 @@ module.exports = {
 
             //let delete variation
             if (body.hasOwnProperty('variationsDeleted')) {
+                console.log({
+                    in: body.variationsDeleted.filter((it) => {
+                        let index = variationsNoDelete.findIndex(itt => { return itt === it; });
+                        return index === -1;
+                    })
+                })
                 await Variations.destroy({
                     id: {
                         in: body.variationsDeleted.filter((it) => {
                             let index = variationsNoDelete.findIndex(itt => { return itt === it; });
-                            return index !== -1;
+                            return index === -1;
                         })
                     }
                 });
@@ -378,21 +384,21 @@ module.exports = {
             let fishVariations = await Variations.find({ 'fish': fish.id }).populate('fishPreparation').populate('wholeFishWeight');
 
             // sort fish variations for app
-            fishVariations = fishVariations.sort( (a, b) => { // non-anonymous as you ordered...
-		if( a.wholeFishWeight !== null || b.wholeFishWeight !== null ) { 
-                var textA = a.wholeFishWeight.name.toUpperCase();
-                var textB = b.wholeFishWeight.name.toUpperCase();
-                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-		} else return 0;
-                
+            fishVariations = fishVariations.sort((a, b) => { // non-anonymous as you ordered...
+                if (a.wholeFishWeight !== null || b.wholeFishWeight !== null) {
+                    var textA = a.wholeFishWeight.name.toUpperCase();
+                    var textB = b.wholeFishWeight.name.toUpperCase();
+                    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                } else return 0;
+
             });
-            variations = variations.sort( (a, b) => { // non-anonymous as you ordered...
-		if( a.wholeFishWeight !== null || b.wholeFishWeight !== null ) { 
-                var textA = a.wholeFishWeight.name.toUpperCase();
-                var textB = b.wholeFishWeight.name.toUpperCase();
-                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; 
-		} else return 0;
-                
+            variations = variations.sort((a, b) => { // non-anonymous as you ordered...
+                if (a.wholeFishWeight !== null || b.wholeFishWeight !== null) {
+                    var textA = a.wholeFishWeight.name.toUpperCase();
+                    var textB = b.wholeFishWeight.name.toUpperCase();
+                    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                } else return 0;
+
             });
             fishVariations = []
 
@@ -423,18 +429,18 @@ module.exports = {
                 variations.map(async variation => {
 
 
-	let fishType;
+                    let fishType;
                     let kgConversionRate;
-                    if( !variation.hasOwnProperty('kgConversionRate') || variation.kgConversionRate == undefined || variation.kgConversionRate == null || variation.kgConversionRate == 0 ) {                        
-                        if( fish.type.hasOwnProperty( 'id' ) ) {
-                          fishType = fish.type.id;
+                    if (!variation.hasOwnProperty('kgConversionRate') || variation.kgConversionRate == undefined || variation.kgConversionRate == null || variation.kgConversionRate == 0) {
+                        if (fish.type.hasOwnProperty('id')) {
+                            fishType = fish.type.id;
                         }
                         //let fishInformation = await FishType.findOne( { id: fishType } ); // we are getting the unit of measure 
-                        let unitOfMeasure = await UnitOfMeasure.findOne( { name: fish.unitOfSale, isActive: true } )
+                        let unitOfMeasure = await UnitOfMeasure.findOne({ name: fish.unitOfSale, isActive: true })
                         kgConversionRate = unitOfMeasure.kgConversionRate;
-                      } else {
+                    } else {
                         kgConversionRate = variation.kgConversionRate;
-                      }
+                    }
 
                     fish['kgConversionRate'] = kgConversionRate;
 
@@ -527,13 +533,13 @@ module.exports = {
                             };
                         if (isTrimms == false) {
                             if (variation['fishPreparation']['id'] === '5c93bff065e25a011eefbcc2') { //head on
-                                if ( weights.on[variation.wholeFishWeight.id] === undefined )
-                                    weights.on[variation.wholeFishWeight.id]= []
+                                if (weights.on[variation.wholeFishWeight.id] === undefined)
+                                    weights.on[variation.wholeFishWeight.id] = []
 
                                 weights.on[variation.wholeFishWeight.id].push(sld);
                             }
                             else if (variation['fishPreparation']['id'] === '5c93c00465e25a011eefbcc3') { //head off
-                                if ( weights.off[variation.wholeFishWeight.id] === undefined )
+                                if (weights.off[variation.wholeFishWeight.id] === undefined)
                                     weights.off[variation.wholeFishWeight.id] = [];
 
                                 weights.off[variation.wholeFishWeight.id].push(sld);
@@ -647,11 +653,11 @@ module.exports = {
             await Promise.all(
                 variations.map(async (variation, variationIndex) => {
                     fish['kgConversionRate'] = variation.kgConversionRate;
-                    if( variation.parentFishPreparation === null ) {
-                        if( variation.fishPreparation.parent == "0" ) {
+                    if (variation.parentFishPreparation === null) {
+                        if (variation.fishPreparation.parent == "0") {
                             variations[variationIndex]['parentFishPreparation'] = variation.fishPreparation;
                         } else {
-                            let fishPreparationParent = await FishPreparation.findOne( { id: variation.fishPreparation.parent } );
+                            let fishPreparationParent = await FishPreparation.findOne({ id: variation.fishPreparation.parent });
                             variations[variationIndex]['parentFishPreparation'] = fishPreparationParent;
 
                         }
@@ -971,7 +977,7 @@ module.exports = {
             fish_where['status'] = '5c0866f9a0eda00b94acbdc2'; // just published products please
             // end fish filters
             console.log('fish_where', fish_where);
-            let fishes = await Fish.find(fish_where).sort( [ { orderStatus: 'ASC' }, { minDeliveryUnixDate: 'ASC' } ] );
+            let fishes = await Fish.find(fish_where).sort([{ orderStatus: 'ASC' }, { minDeliveryUnixDate: 'ASC' }]);
 
             let products_ids = [];
             fishes.map((item) => {
@@ -980,7 +986,7 @@ module.exports = {
 
             let productos = [];
             variation_where['fish'] = products_ids;
-            let res_variations = await Variations.find(variation_where).populate('fish').populate('fishPreparation').populate('wholeFishWeight').sort( 'minDeliveryUnixDate ASC' );
+            let res_variations = await Variations.find(variation_where).populate('fish').populate('fishPreparation').populate('wholeFishWeight').sort('minDeliveryUnixDate ASC');
             //console.log('variations', res_variations.length);
             let unixNow = Math.floor(new Date());
 
@@ -1017,8 +1023,8 @@ module.exports = {
 
                 m['outOfStock'] = false;
                 //if (minMaxInventory.length > 0) {
-                if (minMaxInventory.length > 0 && Math.max.apply(null, minMaxInventory) > 0 ) { 
-                    if(  Math.max.apply(null, minMaxInventory) > 0 ) {
+                if (minMaxInventory.length > 0 && Math.max.apply(null, minMaxInventory) > 0) {
+                    if (Math.max.apply(null, minMaxInventory) > 0) {
                         m['max'] = Math.max.apply(null, minMaxInventory) // 4
                         m.fish['maximumOrder'] = Math.max.apply(null, minMaxInventory);
                     }
@@ -1139,34 +1145,34 @@ module.exports = {
             }));
 
             let variationsGrouped = {}; //let's joing the variation by product
-            productos.map( row => {
-                console.info( String(row.id) );
-                if ( !variationsGrouped.hasOwnProperty( String(row.id) ) )
-                    variationsGrouped[String(row.id)] = { variations: [], count: 0 }; 
+            productos.map(row => {
+                console.info(String(row.id));
+                if (!variationsGrouped.hasOwnProperty(String(row.id)))
+                    variationsGrouped[String(row.id)] = { variations: [], count: 0 };
 
-                    variationsGrouped[ String(row.id) ].variations.push( row );
-                    variationsGrouped[ String(row.id) ].count += 1;
-            } );
+                variationsGrouped[String(row.id)].variations.push(row);
+                variationsGrouped[String(row.id)].count += 1;
+            });
 
             // let's order the group of variations in each product
-            Object.keys(variationsGrouped).map( (product) => {                                            
-                if (variationsGrouped[product].variations.length >= 1 ){                
-                    variationsGrouped[product].variations = variationsGrouped[product].variations.sort( (a, b) => { // non-anonymous as you ordered...
+            Object.keys(variationsGrouped).map((product) => {
+                if (variationsGrouped[product].variations.length >= 1) {
+                    variationsGrouped[product].variations = variationsGrouped[product].variations.sort((a, b) => { // non-anonymous as you ordered...
                         // ordernamos por whole fish weight, in old product could not have a wholeFishWeight
-                        if( a.variation.wholeFishWeight !== undefined && a.variation.wholeFishWeight !== null && b.variation.wholeFishWeight !== undefined && b.variation.wholeFishWeight !== null  ) {
+                        if (a.variation.wholeFishWeight !== undefined && a.variation.wholeFishWeight !== null && b.variation.wholeFishWeight !== undefined && b.variation.wholeFishWeight !== null) {
                             var textA = a.variation.wholeFishWeight.name.toUpperCase();
                             var textB = b.variation.wholeFishWeight.name.toUpperCase();
                             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-    
+
                         } else {
                             var textA = a.variation.fishPreparation.name.toUpperCase();
                             var textB = b.variation.fishPreparation.name.toUpperCase();
                             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                         }
-                        
+
                     });
-                }                    
-              } )
+                }
+            })
 
             return res.json(variationsGrouped)
 
@@ -1196,8 +1202,8 @@ module.exports = {
             let start = Number(req.params.page);
             --start;
             let publishedProducts = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' })
-            .sort( 'minDeliveryUnixDate ASC' )
-            .paginate({ page: start, limit: req.params.limit })
+                .sort('minDeliveryUnixDate ASC')
+                .paginate({ page: start, limit: req.params.limit })
             let currentCharges = await sails.helpers.currentCharges();
             let products_ids = [];
             publishedProducts.map((item) => {
@@ -1205,7 +1211,7 @@ module.exports = {
             });
             let minMaxVariationPrices = [];
             let productos = [];
-            let variations = await Variations.find().where({ fish: products_ids }).populate('fish').populate('fishPreparation').populate('wholeFishWeight').sort( 'minDeliveryUnixDate DESC' );
+            let variations = await Variations.find().where({ fish: products_ids }).populate('fish').populate('fishPreparation').populate('wholeFishWeight').sort('minDeliveryUnixDate DESC');
             //console.log('variations', variations.length);
             let unixNow = Math.floor(new Date());
             await Promise.all(variations.map(async function (m) {
@@ -1244,12 +1250,12 @@ module.exports = {
                     m['min'] = Math.min.apply(null, minMax) // 1
                 }
 
-                if (minMaxInventory.length > 0 && Math.max.apply(null, minMaxInventory) > 0 ) {                    
-                    if(  Math.max.apply(null, minMaxInventory) > 0 ) {
+                if (minMaxInventory.length > 0 && Math.max.apply(null, minMaxInventory) > 0) {
+                    if (Math.max.apply(null, minMaxInventory) > 0) {
                         m['max'] = Math.max.apply(null, minMaxInventory) // 4
                         m.fish['maximumOrder'] = Math.max.apply(null, minMaxInventory);
                     }
-                    
+
                     m['outOfStock'] = false;
                     let dateParts = inventory[0].short_date.split('/');
                     m.fish['minInventoryDate'] = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]);//inventory[0].short_date;
@@ -1290,8 +1296,8 @@ module.exports = {
                 }
 
                 //if (m.max === 0)
-                    //maxPrice = minPrice;
-                    
+                //maxPrice = minPrice;
+
 
                 if (minPrice.finalPrice > maxPrice.finalPrice) {
                     m['minPrice'] = maxPrice; // minPriceVar.min).toFixed(2));//Math.min.apply(null, minMaxVariationPrices);
@@ -1323,7 +1329,7 @@ module.exports = {
                         : -1;                   // a and b are equal
             });
 
-            let arr = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' }).sort( 'minDeliveryUnixDate ASC' ),
+            let arr = await Fish.find({ status: '5c0866f9a0eda00b94acbdc2' }).sort('minDeliveryUnixDate ASC'),
                 page_size = Number(req.params.limit), pages = 0;
             //console.log(arr.length, Number(arr.length / page_size));
             if (parseInt(arr.length / page_size, 10) < Number(arr.length / page_size)) {
@@ -1331,45 +1337,45 @@ module.exports = {
             } else {
                 pages = parseInt(arr.length / page_size, 10)
             }
-            
+
             // product list in admin still show not grouped variations
-            if ( !req.allParams().hasOwnProperty( 'is_product_list' ) ) {
+            if (!req.allParams().hasOwnProperty('is_product_list')) {
                 let variationsGrouped = {}; //let's joing the variation by product
                 // grouping variations
-                productos.map( row => {
-                    if ( !variationsGrouped.hasOwnProperty( String(row.id) ) )
-                        variationsGrouped[String(row.id)] = { variations: [], count: 0 }; 
+                productos.map(row => {
+                    if (!variationsGrouped.hasOwnProperty(String(row.id)))
+                        variationsGrouped[String(row.id)] = { variations: [], count: 0 };
 
-                    variationsGrouped[ String(row.id) ].variations.push( row );
-                    variationsGrouped[ String(row.id) ].count += 1;
-                } );
+                    variationsGrouped[String(row.id)].variations.push(row);
+                    variationsGrouped[String(row.id)].count += 1;
+                });
                 // let's order the group of variations in each product
-                Object.keys(variationsGrouped).map( (product) => {                                            
-                        if (variationsGrouped[product].variations.length >= 1 ){                
-                            variationsGrouped[product].variations = variationsGrouped[product].variations.sort( (a, b) => { // non-anonymous as you ordered...
-                                // ordernamos por whole fish weight, in old product could not have a wholeFishWeight
-                                if( a.variation.wholeFishWeight !== undefined && a.variation.wholeFishWeight !== null && b.variation.wholeFishWeight !== undefined && b.variation.wholeFishWeight !== null  ) {
-                                    var textA = a.variation.wholeFishWeight.name.toUpperCase();
-                                    var textB = b.variation.wholeFishWeight.name.toUpperCase();
-                                    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-            
-                                } else {
-                                    var textA = a.variation.fishPreparation.name.toUpperCase();
-                                    var textB = b.variation.fishPreparation.name.toUpperCase();
-                                    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-                                }
-                                
-                            });
-                        }                    
-                } )
-                
-                
+                Object.keys(variationsGrouped).map((product) => {
+                    if (variationsGrouped[product].variations.length >= 1) {
+                        variationsGrouped[product].variations = variationsGrouped[product].variations.sort((a, b) => { // non-anonymous as you ordered...
+                            // ordernamos por whole fish weight, in old product could not have a wholeFishWeight
+                            if (a.variation.wholeFishWeight !== undefined && a.variation.wholeFishWeight !== null && b.variation.wholeFishWeight !== undefined && b.variation.wholeFishWeight !== null) {
+                                var textA = a.variation.wholeFishWeight.name.toUpperCase();
+                                var textB = b.variation.wholeFishWeight.name.toUpperCase();
+                                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+
+                            } else {
+                                var textA = a.variation.fishPreparation.name.toUpperCase();
+                                var textB = b.variation.fishPreparation.name.toUpperCase();
+                                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                            }
+
+                        });
+                    }
+                })
+
+
 
                 res.json({ variationsGrouped, pagesNumber: pages });
             } else {
                 res.json({ productos, pagesNumber: pages });
             }
-            
+
         }
         catch (e) {
             res.serverError(e);
