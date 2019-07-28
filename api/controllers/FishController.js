@@ -337,7 +337,7 @@ module.exports = {
                     id: {
                         in: body.variationsDeleted.filter((it) => {
                             let index = variationsNoDelete.findIndex(itt => { return itt === it; });
-                            return index !== -1;
+                            return index === -1;
                         })
                     }
                 });
