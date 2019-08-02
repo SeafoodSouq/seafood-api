@@ -70,7 +70,7 @@ const processData = async function (itemsShopping, cart, OrderNumber, uaeTaxes, 
 }
 
 const getName = function(orderNumber, cart){
-    return orderNumber+ '-'+ cart.buyer.dataExtra.companyName.replace(/ /g, '') + '-'+ moment().format('MMDDYY')+ '.pdf';
+    return orderNumber+ '-'+ cart.buyer.dataExtra.companyName.replace(/ /g, '') + '-'+ moment().format('DDMMYY')+ '.pdf';
 };
 
 module.exports = {
