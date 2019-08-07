@@ -28,14 +28,32 @@ module.exports.blueprints = {
 
   rest: true,
 
-
   /***************************************************************************
   *                                                                          *
   * Automatically expose CRUD "shortcut" routes to GET requests?             *
   * (These are enabled by default in development only.)                      *
   *                                                                          *
   ***************************************************************************/
-
   shortcuts: false,
+
+  parseBlueprintOptions: function(req) {
+
+  // Get the default query options.
+  var queryOptions = req._sails.hooks.blueprints.parseBlueprintOptions(req);
+
+  // If this is the "find" or "populate" blueprint action, and the normal query options
+  // indicate that the request is attempting to set an exceedingly high `limit` clause,
+  // then prevent it (we'll say `limit` must not exceed 100).
+  if (req.options.blueprintAction === 'find' || req.options.blueprintAction === 'populate') {
+  //  if (queryOptions.criteria.limit > 100) {
+  //if ( queryOptions.criteria !== undefined ) {
+      queryOptions.criteria.limit = 100;
+  //}
+  }
+  //}
+
+  return queryOptions;
+
+ }
 
 };
